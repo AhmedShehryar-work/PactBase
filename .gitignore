@@ -1,0 +1,71 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Logs
+logs
+*.log
+*.log.*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+coverage/
+temp/
+tmp/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# System files
+.DS_Store
+Thumbs.db
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# OS files
+ehthumbs.db
+Icon?
+Desktop.ini
+
+# Test & cache folders
+.cache/
+jest-cache/
+jest-test-results.json
+
+# ESLint / Prettier / Stylelint
+.eslintcache
+.prettiercache
+
+# Parcel / Vite
+.parcel-cache/
+.vite/
+
+# Firebase
+.firebase/
+.firebaserc
+
+# Local server uploads
+uploads/
+public/uploads/
+
+# Misc
+*.swp
+*.swo
