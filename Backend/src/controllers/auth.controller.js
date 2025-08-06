@@ -6,7 +6,7 @@ export const signup = async (req, res) => {
     try {
 
         res = await Q`INSERT INTO test (username, pass)
-        VALUES VALUES (${'abc'}, ${'def'})
+        VALUES (${'abc'}, ${'def'})
         RETURNING *`;
         console.log(res)
         
