@@ -8,7 +8,7 @@ export const signup = async (req, res) => {
         res = await Q`INSERT INTO test (username, pass)
         VALUES (${'abc'}, ${'def'})
         RETURNING *`;
-        console.log(res)
+        console.log(res);
         
     } catch (error) {
         console.log("ERROR: ", error);
