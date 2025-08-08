@@ -25,4 +25,5 @@ app.use("/api/auth", authRoutes);
 
 app.listen(PORT, () => {
   console.log("Server is running on PORT: " + PORT);
+  console.log(`${process.env.DATABASE_URI} 1`);
 });
