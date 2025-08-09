@@ -1,10 +1,16 @@
 import React, { useState } from "react";
+import axios from "axios";
 
-export default function UploadForm() {
+export default function RegistrationForm() {
   const [formData, setFormData] = useState({
+    fullName: "",
     username: "",
     email: "",
-    profilePic: null,
+    password: "",
+    profileImage: null,
+    cnicNo: "",
+    cnicFrontImage: null,
+    cnicBackImage: null,
   });
 
   const handleChange = (e) => {
@@ -18,20 +24,16 @@ export default function UploadForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const data = new FormData();
-    data.append("username", formData.username);
-    data.append("email", formData.email);
-    data.append("profilePic", formData.profilePic);
+    Object.entries(formData).forEach(([key, value]) => {
+      data.append(key, value);
+    });
 
     try {
-      const res = await fetch("http://localhost:5000/upload", {
-        method: "POST",
-        body: data,
+      const res = await axios.post("http://localhost:4000/api/auth/signup", data, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
-
-      const result = await res.json();
-      console.log("Server response:", result);
+      console.log("Server response:", res.data);
       alert("Form submitted successfully!");
     } catch (error) {
       console.error("Error uploading:", error);
@@ -40,6 +42,17 @@ export default function UploadForm() {
 
   return (
     <form onSubmit={handleSubmit} encType="multipart/form-data">
+      <div>
+        <label>Full Name:</label>
+        <input
+          type="text"
+          name="fullName"
+          value={formData.fullName}
+          onChange={handleChange}
+          required
+        />
+      </div>
+
       <div>
         <label>Username:</label>
         <input
@@ -63,17 +76,64 @@ export default function UploadForm() {
       </div>
 
       <div>
-        <label>Profile Picture:</label>
+        <label>Password:</label>
         <input
-          type="file"
-          name="profilePic"
-          accept="image/*"
+          type="password"
+          name="password"
+          value={formData.password}
           onChange={handleChange}
           required
         />
       </div>
 
-      <button type="submit">Submit</button>
+      <div>
+        <label>Profile Image:</label>
+        <input
+          type="file"
+          name="profileImage"
+          accept="image/*"
+          capture="user" // This opens the camera directly on mobile
+          onChange={handleChange}
+          required
+        />
+      </div>
+
+      <div>
+        <label>CNIC Number:</label>
+        <input
+          type="text"
+          name="cnicNo"
+          value={formData.cnicNo}
+          onChange={handleChange}
+          required
+        />
+      </div>
+
+      <div>
+        <label>CNIC Front Image:</label>
+        <input
+          type="file"
+          name="cnicFrontImage"
+          accept="image/*"
+          capture="environment" // Back camera
+          onChange={handleChange}
+          required
+        />
+      </div>
+
+      <div>
+        <label>CNIC Back Image:</label>
+        <input
+          type="file"
+          name="cnicBackImage"
+          accept="image/*"
+          capture="environment"
+          onChange={handleChange}
+          required
+        />
+      </div>
+
+      <button type="submit">Register</button>
     </form>
   );
 }
