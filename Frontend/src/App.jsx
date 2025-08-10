@@ -11,6 +11,9 @@ export default function RegistrationForm() {
     cnicNo: "",
     cnicFrontImage: null,
     cnicBackImage: null,
+    Image1: null,
+    Image2: null,
+    Image3: null,
   });
 
   const handleChange = (e) => {
@@ -44,93 +47,58 @@ export default function RegistrationForm() {
     <form onSubmit={handleSubmit} encType="multipart/form-data">
       <div>
         <label>Full Name:</label>
-        <input
-          type="text"
-          name="fullName"
-          value={formData.fullName}
-          onChange={handleChange}
-          required
-        />
+        <input type="text" name="fullName" value={formData.fullName} onChange={handleChange} required />
       </div>
 
       <div>
         <label>Username:</label>
-        <input
-          type="text"
-          name="username"
-          value={formData.username}
-          onChange={handleChange}
-          required
-        />
+        <input type="text" name="username" value={formData.username} onChange={handleChange} required />
       </div>
 
       <div>
         <label>Email:</label>
-        <input
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
+        <input type="email" name="email" value={formData.email} onChange={handleChange} required />
       </div>
 
       <div>
         <label>Password:</label>
-        <input
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
+        <input type="password" name="password" value={formData.password} onChange={handleChange} required />
       </div>
 
       <div>
         <label>Profile Image:</label>
-        <input
-          type="file"
-          name="profileImage"
-          accept="image/*"
-          capture="user" // This opens the camera directly on mobile
-          onChange={handleChange}
-          required
-        />
+        <input type="file" name="profileImage" accept="image/*" capture="user" onChange={handleChange} required />
       </div>
 
       <div>
         <label>CNIC Number:</label>
-        <input
-          type="text"
-          name="cnicNo"
-          value={formData.cnicNo}
-          onChange={handleChange}
-          required
-        />
+        <input type="text" name="cnicNo" value={formData.cnicNo} onChange={handleChange} required />
       </div>
 
       <div>
         <label>CNIC Front Image:</label>
-        <input
-          type="file"
-          name="cnicFrontImage"
-          accept="image/*"
-          capture="environment" // Back camera
-          onChange={handleChange}
-          required
-        />
+        <input type="file" name="cnicFrontImage" accept="image/*" capture="environment" onChange={handleChange} required />
       </div>
 
       <div>
         <label>CNIC Back Image:</label>
-        <input
-          type="file"
-          name="cnicBackImage"
-          accept="image/*"
-          capture="environment"
-          onChange={handleChange}
-          required
-        />
+        <input type="file" name="cnicBackImage" accept="image/*" capture="environment" onChange={handleChange} required />
+      </div>
+
+      {/* Extra Images */}
+      <div>
+        <label>Test Image 1:</label>
+        <input type="file" name="Image1" accept="image/*" onChange={handleChange} />
+      </div>
+
+      <div>
+        <label>Test Image 2:</label>
+        <input type="file" name="Image2" accept="image/*" onChange={handleChange} />
+      </div>
+
+      <div>
+        <label>Test Image 3:</label>
+        <input type="file" name="Image3" accept="image/*" onChange={handleChange} />
       </div>
 
       <button type="submit">Register</button>
