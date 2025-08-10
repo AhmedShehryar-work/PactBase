@@ -7,13 +7,13 @@ export default function RegistrationForm() {
     username: "",
     email: "",
     password: "",
-    profileImage: null,
+    //profileImage: null,
     cnicNo: "",
-    cnicFrontImage: null,
-    cnicBackImage: null,
-    Image1: null,
-    Image2: null,
-    Image3: null,
+    //cnicFrontImage: null,
+    //cnicBackImage: null,
+    //Image1: null,
+    //Image2: null,
+    //Image3: null,
   });
 
   const handleChange = (e) => {
@@ -65,41 +65,40 @@ export default function RegistrationForm() {
         <input type="password" name="password" value={formData.password} onChange={handleChange} required />
       </div>
 
-      <div>
+      {/* <div>
         <label>Profile Image:</label>
-        <input type="file" name="profileImage" accept="image/*" capture="user" onChange={handleChange} required />
-      </div>
+        <input type="file" name="profileImage" accept="image/jpeg, image/png, image/webp" capture="user" onChange={handleChange} required />
+      </div> */}
 
       <div>
         <label>CNIC Number:</label>
         <input type="text" name="cnicNo" value={formData.cnicNo} onChange={handleChange} required />
       </div>
 
-      <div>
+      {/* <div>
         <label>CNIC Front Image:</label>
-        <input type="file" name="cnicFrontImage" accept="image/*" capture="environment" onChange={handleChange} required />
+        <input type="file" name="cnicFrontImage" accept="image/jpeg, image/png, image/webp" capture="environment" onChange={handleChange} required />
       </div>
 
       <div>
         <label>CNIC Back Image:</label>
-        <input type="file" name="cnicBackImage" accept="image/*" capture="environment" onChange={handleChange} required />
+        <input type="file" name="cnicBackImage" accept="image/jpeg, image/png, image/webp" capture="environment" onChange={handleChange} required />
       </div>
 
-      {/* Extra Images */}
       <div>
         <label>Test Image 1:</label>
-        <input type="file" name="Image1" accept="image/*" onChange={handleChange} />
+        <input type="file" name="Image1" accept="image/jpeg, image/png, image/webp" onChange={handleChange} />
       </div>
 
       <div>
         <label>Test Image 2:</label>
-        <input type="file" name="Image2" accept="image/*" onChange={handleChange} />
+        <input type="file" name="Image2" accept="image/jpeg, image/png, image/webp" onChange={handleChange} />
       </div>
 
       <div>
         <label>Test Image 3:</label>
-        <input type="file" name="Image3" accept="image/*" onChange={handleChange} />
-      </div>
+        <input type="file" name="Image3" accept="image/jpeg, image/png, image/webp" onChange={handleChange} />
+      </div> */}
 
       <button type="submit">Register</button>
     </form>

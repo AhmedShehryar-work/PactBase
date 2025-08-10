@@ -1,14 +1,35 @@
 import Q from "../config/db.js"
-
+import { v4 as uid } from 'uuid';
 
 export const signup = async (req, res) => {
 
     try {
 
-        res = await Q`INSERT INTO test (username, pass)
-        VALUES (${'abc'}, ${'def'})
-        RETURNING *`;
-        console.log(res);
+        const {fullName, username, email, password, cnicNo} = req.body;
+
+        const user_id = uid();
+
+        try {
+            await Q.begin(async (sqlTx) => {
+
+                await sqlTx`
+                INSERT INTO users (id, full_name, username, email, password)
+                VALUES (${user_id}, ${fullName}, ${username}, ${email}, ${password})
+                `;
+
+                await sqlTx`
+                INSERT INTO pending_users (id, cnic_no)
+                VALUES (${cnicNo}, ${cnicNo})
+                `;
+
+            });
+
+            res.json({ message: "User registered and pending verification", user_id });
+
+        } catch (error) {
+            console.error("Transaction error:", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
         
     } catch (error) {
         console.log("ERROR: ", error);
