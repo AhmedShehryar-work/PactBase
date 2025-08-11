@@ -8,15 +8,15 @@ export const activate = async (req, res) => {
 
         await Q.begin(async (sqlTx) => {
 
-            const updatedUser = await sqlTx`
+            const [activatedUser] = await sqlTx`
                 UPDATE users
                 SET status = 'active'
                 WHERE id = ${user_id}
                 RETURNING *
             `;
 
-            if (updatedUser.length === 0) {
-                throw new Error("User not found");
+            if (!activatedUser) {
+                return res.status(404).json({ error: "User not found" });
             }
 
         });
@@ -36,15 +36,16 @@ export const disable = async (req, res) => {
 
     try{
 
-        await Q.begin(async (sqlTx) => {
+        const [disabledUser] = await Q`
+        UPDATE users
+        SET status = 'disabled'
+        WHERE id = ${user_id}
+        RETURNING *
+        `;
 
-            await sqlTx`
-            UPDATE users
-            SET status = ${'disabled'}
-            WHERE id = ${user_id}
-            `;
-
-        });
+        if (!disabledUser) {
+            return res.status(404).json({ error: "User not found" });
+        }
 
         res.status(200).json({ success: true});
 
