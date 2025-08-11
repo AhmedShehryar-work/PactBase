@@ -1,23 +1,24 @@
-import Q from "../config/db.js"
+import Q from "../../config/db.js"
 
 export const getUser = async (req, res) => {
 
-    const {user_id} = req.body;
 
     try{
 
         await Q.begin(async (sqlTx) => {
 
-            const [user] = await Q`
+            const [user] = await sqlTx`
             SELECT *
-            FROM users
-            WHERE id = ${user_id}
+            FROM pending_users
+            ORDER BY created_at ASC   -- oldest first (FIFO)
+            FOR UPDATE SKIP LOCKED
+            LIMIT 1;
             `;
 
             if (!user) {
                 return res.status(404).json({ error: "User not found" });
             }
-
+            console.log("---------",user)
             res.status(200).json({ success: true, user });
 
         });

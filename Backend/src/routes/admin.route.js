@@ -4,8 +4,8 @@ import { getUser, activate, disable } from "../controllers/admin/status.controll
 
 const router = express.Router();
 
-router.post("/activate", getUser);
-router.post("/activate", activate);
-router.post("/disable", disable);
+router.post("/user", getUser);
+router.patch("/activate", activate);
+router.patch("/disable", disable);
 
 export default router;

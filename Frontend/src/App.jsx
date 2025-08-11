@@ -1,7 +1,8 @@
 import SignUpPage from "./pages/SignUpPage";
 import AdminPage from "./pages/AdminPage";
+import PageNotFound from "./pages/PageNotFound";
 
-import { Routes, Route, Navigate } from "react-router-dom";
+import {BrowserRouter as Router, Routes, Route, Link} from "react-router-dom";
 
 
 const App = () => {
@@ -9,12 +10,18 @@ const App = () => {
   return (
     <div>
 
-      <Routes>
+      <Router>
+      <nav style={{ textAlign: "center", padding: "20px", fontSize: "24px" }}>
+        <Link to="/signup" style={{ margin: "0 20px" }}>Signup</Link>
+        <Link to="/admin" style={{ margin: "0 20px" }}>Admin</Link>
+      </nav>
 
+      <Routes>
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/admin" element={<AdminPage />} />
-        <Route path="*" element={<NotFoundPage />} />
+        <Route path="/*" element={<PageNotFound />} />
       </Routes>
+    </Router>
 
     </div>
   );
