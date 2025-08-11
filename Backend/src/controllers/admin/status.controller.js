@@ -18,7 +18,7 @@ export const getUser = async (req, res) => {
             if (!user) {
                 return res.status(404).json({ error: "User not found" });
             }
-            console.log("---------",user)
+
             res.status(200).json({ success: true, user });
 
         });
@@ -49,9 +49,14 @@ export const activate = async (req, res) => {
                 return res.status(404).json({ error: "User not found" });
             }
 
-        });
+            await sqlTx`
+                DELETE FROM pending_users
+                WHERE id = ${user_id}
+            `;
 
-        res.status(200).json({ success: true});
+            res.status(200).json({ success: true});
+
+        });
 
     } catch (error) {
         console.error(error);

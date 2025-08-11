@@ -32,16 +32,16 @@ const AdminPage = () => {
     }
   };
 
-  const deactivateUser = async () => {
-    if (!user) return;
-    try {
-      await axios.patch(`http://localhost:4000/admin/deactivate`, {user_id: user.id});
-      setUser(null);
-    } catch (err) {
-      console.error(err);
-      alert("Error deactivating user");
-    }
-  };
+  // const deactivateUser = async () => {
+  //   if (!user) return;
+  //   try {
+  //     await axios.patch(`http://localhost:4000/admin/deactivate`, {user_id: user.id});
+  //     setUser(null);
+  //   } catch (err) {
+  //     console.error(err);
+  //     alert("Error deactivating user");
+  //   }
+  // };
 
   return (
     <div style={{
@@ -67,11 +67,8 @@ const AdminPage = () => {
           <h2>User CNIC: {loading ? "Loading..." : user.cnic_no}</h2>
           
           <div style={{ marginTop: "20px" }}>
-            <button onClick={activateUser} style={{ marginRight: "10px" }}>
+            <button onClick={activateUser} style={{ backgroundColor: "green", color: "white",marginRight: "10px" }}>
               Activate
-            </button>
-            <button onClick={deactivateUser} style={{ backgroundColor: "red", color: "white" }}>
-              Deactivate
             </button>
           </div>
         </div>
