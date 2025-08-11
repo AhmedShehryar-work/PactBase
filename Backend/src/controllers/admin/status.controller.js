@@ -1,5 +1,34 @@
 import Q from "../config/db.js"
 
+export const getUser = async (req, res) => {
+
+    const {user_id} = req.body;
+
+    try{
+
+        await Q.begin(async (sqlTx) => {
+
+            const [user] = await Q`
+            SELECT *
+            FROM users
+            WHERE id = ${user_id}
+            `;
+
+            if (!user) {
+                return res.status(404).json({ error: "User not found" });
+            }
+
+            res.status(200).json({ success: true, user });
+
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error - Failed to activate user' });
+    }
+
+}
+
 export const activate = async (req, res) => {
 
     const {user_id} = req.body;
