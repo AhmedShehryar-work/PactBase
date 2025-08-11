@@ -1,106 +1,22 @@
-import React, { useState } from "react";
-import axios from "axios";
+import SignUpPage from "./pages/SignUpPage";
+import AdminPage from "./pages/AdminPage";
 
-export default function RegistrationForm() {
-  const [formData, setFormData] = useState({
-    fullName: "",
-    username: "",
-    email: "",
-    password: "",
-    //profileImage: null,
-    cnicNo: "",
-    //cnicFrontImage: null,
-    //cnicBackImage: null,
-    //Image1: null,
-    //Image2: null,
-    //Image3: null,
-  });
+import { Routes, Route, Navigate } from "react-router-dom";
 
-  const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    if (files) {
-      setFormData((prev) => ({ ...prev, [name]: files[0] }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
-  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const data = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      data.append(key, value);
-    });
-
-    try {
-      const res = await axios.post("http://localhost:4000/api/auth/signup", data, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      console.log("Server response:", res.data);
-      alert("Form submitted successfully!");
-    } catch (error) {
-      console.error("Error uploading:", error);
-    }
-  };
+const App = () => {
 
   return (
-    <form onSubmit={handleSubmit} encType="multipart/form-data">
-      <div>
-        <label>Full Name:</label>
-        <input type="text" name="fullName" value={formData.fullName} onChange={handleChange} required />
-      </div>
+    <div>
 
-      <div>
-        <label>Username:</label>
-        <input type="text" name="username" value={formData.username} onChange={handleChange} required />
-      </div>
+      <Routes>
 
-      <div>
-        <label>Email:</label>
-        <input type="email" name="email" value={formData.email} onChange={handleChange} required />
-      </div>
+        <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/admin" element={<AdminPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
 
-      <div>
-        <label>Password:</label>
-        <input type="password" name="password" value={formData.password} onChange={handleChange} required />
-      </div>
-
-      {/* <div>
-        <label>Profile Image:</label>
-        <input type="file" name="profileImage" accept="image/jpeg, image/png, image/webp" capture="user" onChange={handleChange} required />
-      </div> */}
-
-      <div>
-        <label>CNIC Number:</label>
-        <input type="text" name="cnicNo" value={formData.cnicNo} onChange={handleChange} required />
-      </div>
-
-      {/* <div>
-        <label>CNIC Front Image:</label>
-        <input type="file" name="cnicFrontImage" accept="image/jpeg, image/png, image/webp" capture="environment" onChange={handleChange} required />
-      </div>
-
-      <div>
-        <label>CNIC Back Image:</label>
-        <input type="file" name="cnicBackImage" accept="image/jpeg, image/png, image/webp" capture="environment" onChange={handleChange} required />
-      </div>
-
-      <div>
-        <label>Test Image 1:</label>
-        <input type="file" name="Image1" accept="image/jpeg, image/png, image/webp" onChange={handleChange} />
-      </div>
-
-      <div>
-        <label>Test Image 2:</label>
-        <input type="file" name="Image2" accept="image/jpeg, image/png, image/webp" onChange={handleChange} />
-      </div>
-
-      <div>
-        <label>Test Image 3:</label>
-        <input type="file" name="Image3" accept="image/jpeg, image/png, image/webp" onChange={handleChange} />
-      </div> */}
-
-      <button type="submit">Register</button>
-    </form>
+    </div>
   );
-}
+};
+export default App;
