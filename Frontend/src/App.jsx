@@ -1,5 +1,6 @@
 import SignUpPage from "./pages/SignUpPage";
 import AdminPage from "./pages/AdminPage";
+import LoginPage from "./pages/LoginPage";
 import PageNotFound from "./pages/PageNotFound";
 
 import {BrowserRouter as Router, Routes, Route, Link} from "react-router-dom";
@@ -19,6 +20,7 @@ const App = () => {
       <Routes>
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/admin" element={<AdminPage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/*" element={<PageNotFound />} />
       </Routes>
     </Router>
