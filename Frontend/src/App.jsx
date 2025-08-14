@@ -15,6 +15,7 @@ const App = () => {
       <nav style={{ textAlign: "center", padding: "20px", fontSize: "24px" }}>
         <Link to="/signup" style={{ margin: "0 20px" }}>Signup</Link>
         <Link to="/admin" style={{ margin: "0 20px" }}>Admin</Link>
+        <Link to="/login" style={{ margin: "0 20px" }}>Login</Link>
       </nav>
 
       <Routes>

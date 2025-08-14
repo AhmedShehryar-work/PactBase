@@ -24,7 +24,7 @@ export const signup = async (req, res) => {
 
             });
 
-            res.json({ message: "User registered and pending verification", user_id });
+            res.status(201).json({ message: "User registered and pending verification", user_id });
 
         } catch (error) {
             console.error("Transaction error:", error);
@@ -39,5 +39,14 @@ export const signup = async (req, res) => {
 }
 
 export const login = async (req, res) =>{
-    
+
+    try{
+        const {username, password} = req.body;
+        
+
+    } catch (error) {
+        console.log("ERROR: ", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+
 }
