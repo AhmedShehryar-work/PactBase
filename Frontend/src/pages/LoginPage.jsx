@@ -12,7 +12,7 @@ export default function LoginPage() {
 
     try {
       const res = await axios.post(
-        "/api/login",
+        "http://localhost:4000//api/login",
         { username, password },
         { withCredentials: true } // important for cookies
       );
