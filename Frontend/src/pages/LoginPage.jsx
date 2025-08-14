@@ -6,21 +6,21 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
     try {
+
+      //TODO: convert to zustand which will update auth user on login
+
       const res = await axios.post(
-        "http://localhost:4000//api/login",
+        "http://localhost:4000/api/login",
         { username, password },
         { withCredentials: true } // important for cookies
       );
-
-      console.log("Login success:", res.data);
-      alert("Login successful!");
-      // Redirect or load dashboard here
-      window.location.href = "/dashboard";
 
     } catch (err) {
       if (err.response?.data?.message) {
