@@ -14,13 +14,26 @@ export const protectRoute = async (req, res, next) => {
       return res.status(401).json({ message: "Unauthorized - Invalid Token" });
     }
 
-    //TODO: get user form database
+      const [user] = await Q`
+      SELECT 
+        id,
+        full_name,
+        email,
+        profile_image,
+        blocked_users,
+        blocked_by,
+        rating,
+        pacts_fulfilled,
+        created_at
+      FROM users
+      WHERE id = ${decoded.id}
+      LIMIT 1
+    `;
+    req.user = user;
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
-    req.user = user;
 
     next();
   } catch (error) {
