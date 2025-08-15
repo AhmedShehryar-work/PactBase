@@ -1,7 +1,7 @@
 import axios from "axios";
 import { create } from "zustand";
 
-export const useAuthStore = create((set, get) => ({
+export const useAuthStore = create((set) => ({
 
   authUser: null,
   isCheckingAuth: true,
@@ -41,7 +41,7 @@ export const useAuthStore = create((set, get) => ({
     }
 
   },
-  
+
   clearLoginError: () => {
     set({ loginError: "" })
   }

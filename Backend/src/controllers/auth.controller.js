@@ -77,12 +77,15 @@ export const login = async (req, res) =>{
 
         const normalizedUsername = username.toLowerCase();
 
-        if (!password) {
-            return res.status(400).json({ message: "Invalid credentials" });
+        if (!username || !password) {
+            return res.status(400).json({ message: "One or more feild empty" });
         }
 
+
         const [user] = await Q`
-            SELECT *
+            SELECT id, full_name, email, password, profile_image,
+            blocked_users, blocked_by, rating, pacts_fulfilled,
+            created_at, status
             FROM users
             WHERE username = ${normalizedUsername}
             LIMIT 1
@@ -98,6 +101,8 @@ export const login = async (req, res) =>{
         if (!isPasswordCorrect) {
         return res.status(400).json({ message: "Invalid credentials" });
         }
+
+        delete user.password; // a little overkill on the security maybe
 
         switch (user.status) {
             case "active":

@@ -29,7 +29,22 @@ export const protectRoute = async (req, res, next) => {
       WHERE id = ${decoded.id}
       LIMIT 1
     `;
-    req.user = user;
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    req.user = {
+      id: user.id,
+      fullName: user.full_name,
+      email: user.email,
+      profilePic: user.profile_image,
+      blockedUsers: user.blocked_users,
+      blockedBy: user.blocked_by,
+      rating: user.rating,
+      pacts_fulfilled: user.pacts_fulfilled,
+      created_at: user.created_at
+    };
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
