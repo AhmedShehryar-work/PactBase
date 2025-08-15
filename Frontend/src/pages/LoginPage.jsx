@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { useAuthStore } from "../stores/useAuthStore";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
 
-  const { login, isLoggingIn, loginError, clearLoginError} = useAuthStore();
+  const navigate = useNavigate();
+
+  const { login, isLoggingIn, loginError, clearLoginError, loginSuccess} = useAuthStore();
 
     const [formData, setFormData] = useState({
       username: "",
@@ -14,6 +17,7 @@ export default function LoginPage() {
       clearLoginError();
       e.preventDefault();
       await login(formData);
+      if(loginSuccess){navigate("/")}     
     };
 
 

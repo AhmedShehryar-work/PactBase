@@ -7,10 +7,11 @@ export const useAuthStore = create((set) => ({
   isCheckingAuth: true,
   isLoggingIn: false,
   loginError: "",
+  loginSuccess: false,
 
   checkAuth: async () => {
     try {
-      const res = await axios.get("http://localhost:4000/api/auth/check");
+      const res = await axios.get("http://localhost:4000/api/auth/check", { withCredentials: true });
       set({ authUser: res.data });
     } catch (error) {
       console.log("Error in checkAuth:", error);
@@ -30,6 +31,7 @@ export const useAuthStore = create((set) => ({
         { withCredentials: true } // important for cookies
       );
       set({ authUser: res.data });
+      set({ loginSuccess: true });
     } catch (err) {
       if (err.response?.data?.message) {
         set({loginError: err.response.data.message});

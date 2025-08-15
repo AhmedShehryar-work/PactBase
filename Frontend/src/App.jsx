@@ -1,10 +1,10 @@
-import SignUpPage from "./pages/SignUpPage";
+import SignUpPage from "./pages/SignupPage";
 import AdminPage from "./pages/AdminPage";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage"
 import PageNotFound from "./pages/PageNotFound";
 
-import {BrowserRouter as Router, Routes, Route, Link} from "react-router-dom";
+import {BrowserRouter as Router, Routes, Route, Link, Navigate} from "react-router-dom";
 import { useEffect } from "react";
 import { useAuthStore } from "./stores/useAuthStore";
 
@@ -34,6 +34,7 @@ const App = () => {
         <Link to="/signup" style={{ margin: "0 20px" }}>Signup</Link>
         <Link to="/admin" style={{ margin: "0 20px" }}>Admin</Link>
         <Link to="/login" style={{ margin: "0 20px" }}>Login</Link>
+        <Link to="/" style={{ margin: "0 20px" }}>Home</Link>
       </nav>
 
       <Routes>

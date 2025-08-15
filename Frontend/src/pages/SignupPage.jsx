@@ -1,7 +1,11 @@
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function RegistrationForm() {
+
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     fullName: "",
     username: "",
@@ -37,7 +41,7 @@ export default function RegistrationForm() {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log("Server response:", res.data);
-      alert("Form submitted successfully!");
+      navigate("/login");
     } catch (error) {
       console.error("Error uploading:", error);
     }
