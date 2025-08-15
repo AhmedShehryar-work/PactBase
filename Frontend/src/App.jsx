@@ -8,7 +8,6 @@ import {BrowserRouter as Router, Routes, Route, Link, Navigate} from "react-rout
 import { useEffect } from "react";
 import { useAuthStore } from "./stores/useAuthStore";
 
-//TODO: add helmet and rate-limiting
 
 const App = () => {
 
@@ -19,7 +18,7 @@ const App = () => {
     checkAuth();
   }, [checkAuth]);
 
-  if (isCheckingAuth && !authUser)
+  if (isCheckingAuth)
     return (
       <div>
         <h1>Loading</h1>
