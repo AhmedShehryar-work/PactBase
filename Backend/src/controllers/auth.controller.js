@@ -60,12 +60,12 @@ export const signup = async (req, res) => {
 
         } catch (error) {
             console.error("Transaction error:", error);
-            res.status(500).json({ error: "Internal Server Error" });
+            res.status(500).json({ message: "Internal Server Error" });
         }
         
     } catch (error) {
         console.log("ERROR: ", error);
-        res.status(500).json({ error: "Internal Server Error" });
+        res.status(500).json({ message: "Internal Server Error" });
     }
 
 }
@@ -76,6 +76,10 @@ export const login = async (req, res) =>{
         const {username, password} = req.body;
 
         const normalizedUsername = username.toLowerCase();
+
+        if (!password) {
+            return res.status(400).json({ message: "Invalid credentials" });
+        }
 
         const [user] = await Q`
             SELECT *
@@ -123,7 +127,7 @@ export const login = async (req, res) =>{
 
     } catch (error) {
         console.log("ERROR: ", error);
-        res.status(500).json({ error: "Internal Server Error" });
+        res.status(500).json({ message: "Internal Server Error" });
     }
 
 }

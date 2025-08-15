@@ -5,6 +5,8 @@ export const useAuthStore = create((set, get) => ({
 
   authUser: null,
   isCheckingAuth: true,
+  isLoggingIn: false,
+  loginError: "",
 
   checkAuth: async () => {
     try {
@@ -17,5 +19,31 @@ export const useAuthStore = create((set, get) => ({
       set({ isCheckingAuth: false });
     }
   },
+
+  login: async (data) => {
+
+    try {
+      set({isLoggingIn: true});
+      const res = await axios.post(
+        "http://localhost:4000/api/login",
+        data,
+        { withCredentials: true } // important for cookies
+      );
+      set({ authUser: res.data });
+    } catch (err) {
+      if (err.response?.data?.message) {
+        set({loginError: err.response.data.message});
+      } else {
+        set({loginError: "Login Failed"});
+      }
+    }finally{
+      set({isLoggingIn: false});
+    }
+
+  },
+  
+  clearLoginError: () => {
+    set({ loginError: "" })
+  }
 
 }));

@@ -1,35 +1,21 @@
 import { useState } from "react";
-import axios from "axios";
+import { useAuthStore } from "../stores/useAuthStore";
 
 export default function LoginPage() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
 
-  
+  const { login, isLoggingIn, loginError, clearLoginError} = useAuthStore();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
+    const [formData, setFormData] = useState({
+      username: "",
+      password: "",
+    });
 
-    try {
+    const handleSubmit = async (e) => {
+      clearLoginError();
+      e.preventDefault();
+      await login(formData);
+    };
 
-      //TODO: convert to zustand which will update auth user on login
-
-      const res = await axios.post(
-        "http://localhost:4000/api/login",
-        { username, password },
-        { withCredentials: true } // important for cookies
-      );
-
-    } catch (err) {
-      if (err.response?.data?.message) {
-        setError(err.response.data.message);
-      } else {
-        setError("Login failed");
-      }
-    }
-  };
 
   return (
     <div style={{ maxWidth: "400px", margin: "50px auto" }}>
@@ -39,8 +25,8 @@ export default function LoginPage() {
           <label>Username</label>
           <input
             type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={formData.username}
+            onChange={(e) => setFormData({ ...formData, username: e.target.value })}
             required
           />
         </div>
@@ -49,16 +35,16 @@ export default function LoginPage() {
           <label>Password</label>
           <input
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={formData.password}
+            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
             required
           />
         </div>
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {loginError && <p style={{ color: "red" }}>{loginError}</p>}
 
-        <button type="submit" style={{ marginTop: "20px" }}>
-          Login
+        <button type="submit" style={{ marginTop: "20px" }} disabled={isLoggingIn}>
+          {isLoggingIn ? "Logging in..." : "Login"}
         </button>
       </form>
     </div>
