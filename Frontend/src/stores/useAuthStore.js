@@ -26,7 +26,7 @@ export const useAuthStore = create((set) => ({
     try {
       set({isLoggingIn: true});
       const res = await axios.post(
-        "http://localhost:4000/api/login",
+        "http://localhost:4000/api/auth/login",
         data,
         { withCredentials: true } // important for cookies
       );
