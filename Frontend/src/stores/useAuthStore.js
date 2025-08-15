@@ -46,6 +46,15 @@ export const useAuthStore = create((set) => ({
 
   clearLoginError: () => {
     set({ loginError: "" })
+  },
+
+  logout: async () => {
+    try {
+      await axios.post("http://localhost:4000/api/auth/logout",{}, { withCredentials: true });
+      set({ authUser: null });
+    } catch (error) {
+      console.log("Error in logout: ", error);
+    }
   }
 
 }));

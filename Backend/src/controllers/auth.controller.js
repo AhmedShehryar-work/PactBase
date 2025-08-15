@@ -147,3 +147,25 @@ export const check = async (req, res) =>{
     }
 
 }
+
+export const logout = (req, res) => {
+  try {
+
+    const token = req.cookies.jwt;
+        
+    if(!token){
+        return res.status(401).json({message:"Who the hell are you to be logging out?! Like dying without ever being born"})
+    }
+
+    res.cookie("jwt", "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV !== "development",
+      sameSite: "strict",
+      maxAge: 0
+    });
+    res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    console.log("Error in logout controller", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};

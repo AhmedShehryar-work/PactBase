@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import Q from "../config/db.js";
 
 export const protectRoute = async (req, res, next) => {
   try {
@@ -52,7 +53,7 @@ export const protectRoute = async (req, res, next) => {
 
     next();
   } catch (error) {
-    console.log("Error in protectRoute middleware: ", error.message);
+    console.log("Error in protectRoute middleware: ", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };

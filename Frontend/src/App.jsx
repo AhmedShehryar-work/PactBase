@@ -8,11 +8,12 @@ import {BrowserRouter as Router, Routes, Route, Link, Navigate} from "react-rout
 import { useEffect } from "react";
 import { useAuthStore } from "./stores/useAuthStore";
 
+//TODO: add helmet and rate-limiting
 
 const App = () => {
 
 
-  const { authUser, checkAuth, isCheckingAuth,} = useAuthStore();
+  const { authUser, checkAuth, isCheckingAuth, logout} = useAuthStore();
 
   useEffect(() => {
     checkAuth();
@@ -35,6 +36,11 @@ const App = () => {
         <Link to="/admin" style={{ margin: "0 20px" }}>Admin</Link>
         <Link to="/login" style={{ margin: "0 20px" }}>Login</Link>
         <Link to="/" style={{ margin: "0 20px" }}>Home</Link>
+        {authUser && (
+                <button onClick={logout}>
+                  Logout
+                </button>
+        )}
       </nav>
 
       <Routes>

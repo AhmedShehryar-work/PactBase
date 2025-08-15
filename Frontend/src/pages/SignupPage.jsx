@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 
 export default function RegistrationForm() {
 
+  //TODO: add live username availability check
+
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
