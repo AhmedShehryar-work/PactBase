@@ -6,6 +6,7 @@ import helmet from "helmet"
 
 import authRoutes from "./routes/auth.route.js";
 import adminRoutes from "./routes/admin.route.js";
+import pactRoutes from "./routes/admin.route.js";
 
 dotenv.config();
 
@@ -40,6 +41,7 @@ app.use(
 );
 
 app.use("/api/auth", authRoutes);
+app.use("/api/pact", pactRoutes);
 app.use("/admin", adminRoutes);
 
 app.listen(PORT, () => {
