@@ -3,6 +3,7 @@ import AdminPage from "./pages/AdminPage";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage"
 import PageNotFound from "./pages/PageNotFound";
+import SearchPage from "./pages/SearchPage"
 
 import {BrowserRouter as Router, Routes, Route, Link, Navigate} from "react-router-dom";
 import { useEffect } from "react";
@@ -44,8 +45,9 @@ const App = () => {
 
       <Routes>
         <Route path="/"  element={authUser ? <HomePage /> : <Navigate to="/login" />}/>
-        <Route path="/signup" element={!authUser ? <SignUpPage /> : <Navigate to="/" />} />
+        <Route path="/searchpact" element={<SearchPage />} />
         <Route path="/admin" element={<AdminPage />} />
+        <Route path="/signup" element={!authUser ? <SignUpPage /> : <Navigate to="/" />} />
         <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to="/" />} />
         <Route path="/*" element={<PageNotFound />} />
       </Routes>
