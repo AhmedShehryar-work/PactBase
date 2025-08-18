@@ -1,4 +1,5 @@
 import Q from "../config/db.js"
+import { v4 as uid } from 'uuid';
 
 export const searchPact = async (req, res) =>{
 
@@ -31,5 +32,28 @@ export const searchPact = async (req, res) =>{
 }
 
 export const makePact = async (req, res) => {
-    
+
+    try {
+        const {title, conditions, to, from} = req.body;
+
+        if (!title?.trim() || !from || !to || !to.length) {
+        return res.status(400).json({ message: "All fields must be filled" });
+        }
+        
+        const pactId = uid();
+
+        const toUsers = JSON.stringify(to)
+
+        await Q`
+        INSERT INTO pacts (id, title, conditions, \`from\`, \`to\`, requested)
+        VALUES (${pactId}, ${title}, ${conditions}, ${from}, ${toUsers}, true)
+        `;
+
+        res.status(201).json({ message: "Pact made.", success: "true"});
+
+    } catch (error) {
+        console.log("Error in MakePact controller: ", error);
+        res.status(500).json({ message: "Internal Server Error", success: "false" });
+    }
+
 }

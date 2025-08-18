@@ -37,6 +37,7 @@ export const protectRoute = async (req, res, next) => {
 
     req.user = {
       id: user.id,
+      username: user.username,
       fullName: user.full_name,
       email: user.email,
       profilePic: user.profile_image,

@@ -83,7 +83,7 @@ export const login = async (req, res) =>{
 
 
         const [user] = await Q`
-            SELECT id, full_name, email, password, profile_image,
+            SELECT id, username, full_name, email, password, profile_image,
             blocked_users, blocked_by, rating, pacts_fulfilled,
             created_at, status
             FROM users
@@ -110,6 +110,7 @@ export const login = async (req, res) =>{
                 generateToken(user.id, res);
                 return res.status(200).json({
                 id: user.id,
+                username: user.username,
                 fullName: user.full_name,
                 email: user.email,
                 profilePic: user.profile_image,
