@@ -11,10 +11,10 @@ const router = express.Router();
 
 const searchLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute in ms
-  max: 6, // max 6 requests per IP per minute
+  max: 60, // max 60 (for testing) requests per IP per minute
   message: { message: "Too many attempts, try again later" },
 });
 
-router.post("/searchpact", upload.none(), searchLimiter, searchPact);
+router.get("/searchpact", upload.none(), searchLimiter, searchPact);
 
 export default router;

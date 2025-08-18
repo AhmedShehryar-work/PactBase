@@ -1,16 +1,16 @@
 import axios from "axios";
 import { create } from "zustand";
 
-export const useAuthStore = create((set) => ({
+export const usePactStore = create((set) => ({
 
   isSearchingPact: false,
   searchedPact: false,
 
 
-  searchPact: async () => {
+  searchPact: async (data) => {
     try {
       set({ isSearchingPact: true });
-      const res = await axios.get("http://localhost:4000/api/pact/searchpact");
+      const res = await axios.get("http://localhost:4000/api/pact/searchpact", { params: { pactId: data }});
       set({ searchedPact: res.data });
     } catch (error) {
       console.log("Error in searchPact:", error);

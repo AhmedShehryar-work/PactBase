@@ -34,6 +34,7 @@ const App = () => {
       <nav style={{ textAlign: "center", padding: "20px", fontSize: "24px" }}>
         <Link to="/signup" style={{ margin: "0 20px" }}>Signup</Link>
         <Link to="/admin" style={{ margin: "0 20px" }}>Admin</Link>
+        <Link to="/searchpact" style={{ margin: "0 20px" }}>Search Pact</Link>
         <Link to="/login" style={{ margin: "0 20px" }}>Login</Link>
         <Link to="/" style={{ margin: "0 20px" }}>Home</Link>
         {authUser && (
@@ -44,7 +45,7 @@ const App = () => {
       </nav>
 
       <Routes>
-        <Route path="/"  element={authUser ? <HomePage /> : <Navigate to="/login" />}/>
+        <Route path="/" element={authUser ? <HomePage /> : <Navigate to="/login" />}/>
         <Route path="/searchpact" element={<SearchPage />} />
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/signup" element={!authUser ? <SignUpPage /> : <Navigate to="/" />} />

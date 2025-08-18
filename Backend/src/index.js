@@ -6,7 +6,7 @@ import helmet from "helmet"
 
 import authRoutes from "./routes/auth.route.js";
 import adminRoutes from "./routes/admin.route.js";
-import pactRoutes from "./routes/admin.route.js";
+import pactRoutes from "./routes/pact.route.js";
 
 dotenv.config();
 
