@@ -29,3 +29,7 @@ export const searchPact = async (req, res) =>{
     }
 
 }
+
+export const makePact = async (req, res) => {
+    
+}
