@@ -42,14 +42,12 @@ export const makePact = async (req, res) => {
         
         const pactId = uid();
 
-        const toUsers = JSON.stringify(to)
-
-        const res = await Q`
+        const result = await Q`
         INSERT INTO pacts (id, title, conditions, "from", "to", requested)
-        VALUES (${pactId}, ${title}, ${conditions}, ${from}, ${toUsers}, true)
+        VALUES (${pactId}, ${title}, ${conditions}, ${from}, ${to}, true)
         `;
 
-        if(!res){
+        if(!result){
             console.log("Error in MakePact query: ", error);
             res.status(500).json({ message: "Error in query for makePact", success: "false" });
         }

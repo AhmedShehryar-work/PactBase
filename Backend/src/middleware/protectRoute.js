@@ -18,6 +18,7 @@ export const protectRoute = async (req, res, next) => {
       const [user] = await Q`
       SELECT 
         id,
+        username,
         full_name,
         email,
         profile_image,

@@ -12,9 +12,9 @@ export default function MakePactForm() {
   const [toInput, setToInput] = useState("");
 
   const handleAddTo = () => {
-    const trimmed = toInput.trim();
-    if (trimmed && !toUsers.includes(trimmed)) {
-      setToUsers([...toUsers, trimmed]);
+    const cleaned = toInput.toLowerCase().replace(/\s+/g, ""); // lowercase & remove all spaces
+    if (cleaned && !toUsers.includes(cleaned)) {
+      setToUsers([...toUsers, cleaned]);
       setToInput("");
     }
   };
@@ -28,11 +28,12 @@ export default function MakePactForm() {
     }
 
     try {
+      const toUsersLower = toUsers.map(user => user.toLowerCase());
       await makePact({
         title,
         conditions,
         from: authUser.username, // auto-filled
-        to: toUsers,             // array of usernames
+        to: toUsersLower,             // array of usernames
       });
       alert("Pact created successfully!");
       setTitle("");
@@ -49,7 +50,7 @@ export default function MakePactForm() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        minHeight: "100vh",
+        minHeight: "60vh",
         fontFamily: "Arial, sans-serif",
       }}
     >
