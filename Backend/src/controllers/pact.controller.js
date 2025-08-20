@@ -11,12 +11,18 @@ export const searchPact = async (req, res) =>{
         return res.status(400).json({ message: "PactId is required" });
         }
 
-        // --- Dummy check (replace with real DB query later) ---
-            if (pactId === "12345") {
+            const [result] = await Q`
+            SELECT *
+            FROM pacts
+            WHERE id = ${pactId}
+            LIMIT 1
+            `;
+
+            if (result) {
             return res.status(200).json({
                 success: true,
                 message: "Pact found!",
-                pact: { id: "12345", name: "Test Pact", status: "Active" },
+                pact: result,
             });
             } else {
             return res.status(404).json({
