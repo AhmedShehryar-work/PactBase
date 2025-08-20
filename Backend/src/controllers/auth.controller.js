@@ -36,8 +36,6 @@ export const signup = async (req, res) => {
         return res.status(400).json({ message: "Email already exists", status: "duplicate_email" });
         }
 
-        const user_id = uid();
-
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -45,13 +43,13 @@ export const signup = async (req, res) => {
             await Q.begin(async (sqlTx) => {
 
                 await sqlTx`
-                INSERT INTO users (id, full_name, username, email, password)
-                VALUES (${user_id}, ${fullName}, ${normalizedUsername}, ${normalizedEmail}, ${hashedPassword})
+                INSERT INTO users (full_name, username, email, password)
+                VALUES (${fullName}, ${normalizedUsername}, ${normalizedEmail}, ${hashedPassword})
                 `;
 
                 await sqlTx`
-                INSERT INTO pending_users (id, cnic_no)
-                VALUES (${user_id}, ${cnicNo})
+                INSERT INTO pending_users (cnic_no)
+                VALUES (${cnicNo})
                 `;
 
             }); 
@@ -83,7 +81,7 @@ export const login = async (req, res) =>{
 
 
         const [user] = await Q`
-            SELECT id, username, full_name, email, password, profile_image,
+            SELECT username, full_name, email, password, profile_image,
             blocked_users, blocked_by, rating, pacts_fulfilled,
             created_at, status
             FROM users
@@ -107,9 +105,8 @@ export const login = async (req, res) =>{
         switch (user.status) {
             case "active":
                 // proceed with login
-                generateToken(user.id, res);
+                generateToken(user.username, res);
                 return res.status(200).json({
-                id: user.id,
                 username: user.username,
                 fullName: user.full_name,
                 email: user.email,

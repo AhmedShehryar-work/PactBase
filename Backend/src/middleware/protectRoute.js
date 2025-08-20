@@ -16,8 +16,7 @@ export const protectRoute = async (req, res, next) => {
     }
 
       const [user] = await Q`
-      SELECT 
-        id,
+      SELECT
         username,
         full_name,
         email,
@@ -28,7 +27,7 @@ export const protectRoute = async (req, res, next) => {
         pacts_fulfilled,
         created_at
       FROM users
-      WHERE id = ${decoded.id}
+      WHERE id = ${decoded.username}
       LIMIT 1
     `;
 
@@ -37,7 +36,6 @@ export const protectRoute = async (req, res, next) => {
     }
 
     req.user = {
-      id: user.id,
       username: user.username,
       fullName: user.full_name,
       email: user.email,

@@ -32,7 +32,7 @@ export const getUser = async (req, res) => {
 
 export const activate = async (req, res) => {
 
-    const {user_id} = req.body;
+    const {username} = req.body;
 
     try{
 
@@ -41,7 +41,7 @@ export const activate = async (req, res) => {
             const [activatedUser] = await sqlTx`
                 UPDATE users
                 SET status = 'active'
-                WHERE id = ${user_id}
+                WHERE username = ${username}
                 RETURNING *
             `;
 
@@ -51,7 +51,7 @@ export const activate = async (req, res) => {
 
             await sqlTx`
                 DELETE FROM pending_users
-                WHERE id = ${user_id}
+                WHERE username = ${username}
             `;
 
             res.status(200).json({ success: true});
@@ -67,14 +67,14 @@ export const activate = async (req, res) => {
 
 export const disable = async (req, res) => {
 
-    const {user_id} = req.body;
+    const {username} = req.body;
 
     try{
 
         const [disabledUser] = await Q`
         UPDATE users
         SET status = 'disabled'
-        WHERE id = ${user_id}
+        WHERE username = ${username}
         RETURNING *
         `;
 
