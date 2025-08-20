@@ -64,7 +64,7 @@ export const makePact = async (req, res) => {
 
             });
 
-            res.status(201).json({ message: "Pact made.", success: "true"});
+            res.status(201).json({ id: pactId, message: "Pact made.", success: "true"});
 
         } catch (error) {
             console.log("Error in MakePact query: ", error);

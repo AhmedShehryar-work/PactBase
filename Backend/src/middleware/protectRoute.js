@@ -27,7 +27,7 @@ export const protectRoute = async (req, res, next) => {
         pacts_fulfilled,
         created_at
       FROM users
-      WHERE id = ${decoded.username}
+      WHERE username = ${decoded.username}
       LIMIT 1
     `;
 

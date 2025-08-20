@@ -3,7 +3,7 @@ import { usePactStore } from "../stores/usePactStore";
 import { useAuthStore } from "../stores/useAuthStore";
 
 export default function MakePactForm() {
-  const { isMakingPact, makePact } = usePactStore();
+  const { isMakingPact, makePact, madePactId } = usePactStore();
   const { authUser } = useAuthStore();
 
   const [title, setTitle] = useState("");
@@ -145,6 +145,7 @@ export default function MakePactForm() {
           {isMakingPact ? "Creating..." : "Create Pact"}
         </button>
       </form>
+      {madePactId ? `Share and use this PactId for this Pact: ${madePactId}` : ""}
     </div>
   );
 }

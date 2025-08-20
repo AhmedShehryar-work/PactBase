@@ -21,12 +21,15 @@ export const usePactStore = create((set) => ({
 
 
   isMakingPact: false,
+  madePactId: "",
 
   makePact: async (data) => {
     try {
       set({ isMakingPact: true });
-      await axios.post("http://localhost:4000/api/pact/make-pact", data,  { withCredentials: true });
+      const res = await axios.post("http://localhost:4000/api/pact/make-pact", data,  { withCredentials: true });
+      set({ madePactId: res.data.id });
     } catch (error) {
+      set({ madePactId: null });
       console.log("Error in searchPact:", error);
     } finally {
       set({ isMakingPact: false });
