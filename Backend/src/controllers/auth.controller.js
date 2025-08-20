@@ -54,7 +54,7 @@ export const signup = async (req, res) => {
                 VALUES (${user_id}, ${cnicNo})
                 `;
 
-            });
+            }); 
 
             res.status(201).json({ message: "User registered and pending verification", user_id });
 

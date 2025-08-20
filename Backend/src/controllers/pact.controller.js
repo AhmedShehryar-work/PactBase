@@ -42,18 +42,28 @@ export const makePact = async (req, res) => {
         
         const pactId = uid();
 
-        const result = await Q`
-        INSERT INTO pacts (id, title, conditions, "from", "to", requested)
-        VALUES (${pactId}, ${title}, ${conditions}, ${from}, ${to}, true)
-        `;
+        try {
+            await Q.begin(async (sqlTx) => {
 
-        if(!result){
+                await sqlTx`
+                INSERT INTO pacts (id, title, conditions, "from", "to", requested)
+                VALUES (${pactId}, ${title}, ${conditions}, ${from}, ${to}, true)
+                `;
+
+                await sqlTx`
+                UPDATE public.users
+                SET pacts_made = array_append(pacts_made, ${pactId})
+                WHERE username = ${from}
+                `;
+
+            });
+
+            res.status(201).json({ message: "Pact made.", success: "true"});
+
+        } catch (error) {
             console.log("Error in MakePact query: ", error);
             res.status(500).json({ message: "Error in query for makePact", success: "false" });
         }
-        
-
-        res.status(201).json({ message: "Pact made.", success: "true"});
 
     } catch (error) {
         console.log("Error in MakePact controller: ", error);
