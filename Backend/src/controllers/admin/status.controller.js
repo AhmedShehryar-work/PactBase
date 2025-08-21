@@ -8,11 +8,12 @@ export const getUser = async (req, res) => {
         await Q.begin(async (sqlTx) => {
 
             const [user] = await sqlTx`
-            SELECT *
-            FROM pending_users
-            ORDER BY created_at ASC   -- oldest first (FIFO)
-            FOR UPDATE SKIP LOCKED
-            LIMIT 1;
+                SELECT *
+                FROM pending_users
+                WHERE locked = false
+                ORDER BY created_at ASC   -- oldest first (FIFO)
+                FOR UPDATE SKIP LOCKED
+                LIMIT 1;
             `;
 
             const [locked] = await sqlTx`
