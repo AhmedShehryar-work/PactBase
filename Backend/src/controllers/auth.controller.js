@@ -64,8 +64,8 @@ export const signup = async (req, res) => {
                 `;
 
                 await sqlTx`
-                INSERT INTO pending_users (cnic_no)
-                VALUES (${cnicNo})
+                INSERT INTO pending_users (username, cnic_no)
+                VALUES (${normalizedUsername}, ${cnicNo})
                 `;
 
             }); 

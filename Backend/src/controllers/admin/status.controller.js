@@ -54,9 +54,9 @@ export const activate = async (req, res) => {
                 WHERE username = ${username}
             `;
 
-            res.status(200).json({ success: true});
-
         });
+
+        res.status(200).json({ success: true});
 
     } catch (error) {
         console.error(error);

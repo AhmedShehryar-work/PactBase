@@ -23,7 +23,7 @@ const AdminPage = () => {
   const activateUser = async () => {
     if (!user) return;
     try {
-      await axios.patch(`http://localhost:4000/admin/activate`, {user_id: user.username});
+      await axios.patch(`http://localhost:4000/admin/activate`, {username: user.username});
       setUser(null);
 
     } catch (err) {
