@@ -26,7 +26,7 @@ export const signup = async (req, res) => {
         `;
 
         if (result?.cnic_exists) {
-        return res.status(400).json({ message: "Cnic already exists", status: "duplicate_cnic" });
+        return res.status(400).json({ message: "Cnic already exists", error_status: "duplicate_cnic" });
         }
 
         const [existingUsername] = await Q`
@@ -37,7 +37,7 @@ export const signup = async (req, res) => {
         `;
 
         if (existingUsername) {
-        return res.status(400).json({ message: "Username already exists", status: "duplicate_username" });
+        return res.status(400).json({ message: "Username already exists", error_status: "duplicate_username" });
         }
 
         // Check email
@@ -49,7 +49,7 @@ export const signup = async (req, res) => {
         `;
 
         if (existingEmail) {
-        return res.status(400).json({ message: "Email already exists", status: "duplicate_email" });
+        return res.status(400).json({ message: "Email already exists", error_status: "duplicate_email" });
         }
 
         const salt = await bcrypt.genSalt(10);
@@ -68,7 +68,7 @@ export const signup = async (req, res) => {
                 VALUES (${normalizedUsername}, ${cnicNo})
                 `;
 
-            }); 
+            });
 
             res.status(201).json({ message: "User registered and pending verification"});
 
@@ -134,10 +134,10 @@ export const login = async (req, res) =>{
                 });
 
             case "disabled":
-                return res.status(403).json({ message: "Account is disabled. Contact support.", status: "disabled" });
+                return res.status(403).json({ message: "Account is disabled. Contact support.", error_status: "disabled" });
 
             case "pending":
-                return res.status(403).json({ message: "Account pending approval.", status: "pending" });
+                return res.status(403).json({ message: "Account pending approval.", error_status: "pending" });
 
             default:
                 return res.status(400).json({ message: "Invalid account status" });

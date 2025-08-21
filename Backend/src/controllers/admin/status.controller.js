@@ -2,6 +2,7 @@ import Q from "../../config/db.js"
 
 export const getUser = async (req, res) => {
 
+    var setuser = null;
 
     try{
 
@@ -16,24 +17,26 @@ export const getUser = async (req, res) => {
                 LIMIT 1;
             `;
 
-            const [locked] = await sqlTx`
-                UPDATE users
-                SET locked = true
-                WHERE username = ${username}
-                RETURNING *
-            `;
-
-            if (!locked) {
-                return res.status(404).json({ error: "User not locked for activation" });
-            }
+            setuser = user;
 
             if (!user) {
-                return res.status(404).json({ error: "User not found" });
+                return res.status(404).json({ error: "No users pending" });
             }
 
         });
 
-        res.status(200).json({ success: true, user });
+        const [locked] = await Q`
+                UPDATE pending_users
+                SET locked = true
+                WHERE username = ${setuser.username}
+                RETURNING *
+            `;
+
+        if (!locked) {
+            return res.status(404).json({ error: "User not locked for activation" });
+        }
+
+        res.status(200).json({ success: true, setuser });
 
     } catch (error) {
         console.error(error);
