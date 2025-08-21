@@ -13,8 +13,24 @@ export const signup = async (req, res) => {
         const normalizedUsername = username.toLowerCase();
         const normalizedEmail = email.toLowerCase();
 
+        if (!fullName || !username || !email || !password || !cnicNo) {
+        return res.status(400).json({ message: "One or more feilds empty."});
+        }
+
+        const [result] = await Q`
+            SELECT (
+                EXISTS (SELECT 1 FROM users WHERE cnic = ${cnicNo})
+                OR
+                EXISTS (SELECT 1 FROM pending_users WHERE cnic_no = ${cnicNo})
+            ) AS cnic_exists
+        `;
+
+        if (result?.cnic_exists) {
+        return res.status(400).json({ message: "Cnic already exists", status: "duplicate_cnic" });
+        }
+
         const [existingUsername] = await Q`
-            SELECT id
+            SELECT username
             FROM users
             WHERE username = ${normalizedUsername}
             LIMIT 1
@@ -26,7 +42,7 @@ export const signup = async (req, res) => {
 
         // Check email
         const [existingEmail] = await Q`
-            SELECT id
+            SELECT username
             FROM users
             WHERE email = ${normalizedEmail}
             LIMIT 1
@@ -43,8 +59,8 @@ export const signup = async (req, res) => {
             await Q.begin(async (sqlTx) => {
 
                 await sqlTx`
-                INSERT INTO users (full_name, username, email, password)
-                VALUES (${fullName}, ${normalizedUsername}, ${normalizedEmail}, ${hashedPassword})
+                INSERT INTO users (full_name, username, email, password, cnic)
+                VALUES (${fullName}, ${normalizedUsername}, ${normalizedEmail}, ${hashedPassword}, ${cnicNo})
                 `;
 
                 await sqlTx`
@@ -54,7 +70,7 @@ export const signup = async (req, res) => {
 
             }); 
 
-            res.status(201).json({ message: "User registered and pending verification", user_id });
+            res.status(201).json({ message: "User registered and pending verification"});
 
         } catch (error) {
             console.error("Transaction error:", error);
@@ -73,12 +89,11 @@ export const login = async (req, res) =>{
     try{
         const {username, password} = req.body;
 
-        const normalizedUsername = username.toLowerCase();
-
         if (!username || !password) {
             return res.status(400).json({ message: "One or more feild empty" });
         }
 
+        const normalizedUsername = username.toLowerCase();
 
         const [user] = await Q`
             SELECT username, full_name, email, password, profile_image,
