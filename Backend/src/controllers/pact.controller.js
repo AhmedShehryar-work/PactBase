@@ -57,9 +57,15 @@ export const makePact = async (req, res) => {
                 `;
 
                 await sqlTx`
-                UPDATE public.users
+                UPDATE users
                 SET pacts_made = array_append(pacts_made, ${pactId})
                 WHERE username = ${from}
+                `;
+
+                await sqlTx`
+                UPDATE users
+                SET pacts_received = array_append(pacts_received, ${pactId})
+                WHERE username = ANY(${to}::text[]);
                 `;
 
             });
