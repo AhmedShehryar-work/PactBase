@@ -15,13 +15,24 @@ export const getUser = async (req, res) => {
             LIMIT 1;
             `;
 
+            const [locked] = await sqlTx`
+                UPDATE users
+                SET locked = true
+                WHERE username = ${username}
+                RETURNING *
+            `;
+
+            if (!locked) {
+                return res.status(404).json({ error: "User not locked for activation" });
+            }
+
             if (!user) {
                 return res.status(404).json({ error: "User not found" });
             }
 
-            res.status(200).json({ success: true, user });
-
         });
+
+        res.status(200).json({ success: true, user });
 
     } catch (error) {
         console.error(error);
