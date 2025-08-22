@@ -8,7 +8,7 @@ export const searchPact = async (req, res) =>{
     try {
 
         if (!pactId || pactId.trim() === "") {
-        return res.status(400).json({ message: "PactId is required" });
+        return res.status(400).json({ success: false , message: "PactId is required" });
         }
 
             const [result] = await Q`
@@ -32,7 +32,7 @@ export const searchPact = async (req, res) =>{
         }
     } catch (error) {
         console.log("Error in searchPact controller: ", error);
-        res.status(500).json({ message: "Internal Server Error" });
+        res.status(500).json({ success: false , message: "Internal Server Error" });
     }
 
 }
@@ -43,7 +43,7 @@ export const makePact = async (req, res) => {
         const {title, conditions, to, from} = req.body;
 
         if (!title?.trim() || !from || !to || !to.length) {
-        return res.status(400).json({ message: "All fields must be filled" });
+        return res.status(400).json({ success: false , message: "All fields must be filled" });
         }
         
         const pactId = uid();
@@ -70,16 +70,16 @@ export const makePact = async (req, res) => {
 
             });
 
-            res.status(201).json({ id: pactId, message: "Pact made.", success: "true"});
+            res.status(201).json({ success: true , id: pactId, message: "Pact made."});
 
         } catch (error) {
             console.log("Error in MakePact query: ", error);
-            res.status(500).json({ message: "Error in query for makePact", success: "false" });
+            res.status(500).json({ success: false , message: "Error in query for makePact"});
         }
 
     } catch (error) {
         console.log("Error in MakePact controller: ", error);
-        res.status(500).json({ message: "Internal Server Error", success: "false" });
+        res.status(500).json({ success: false , message: "Internal Server Error", success: "false" });
     }
 
 }

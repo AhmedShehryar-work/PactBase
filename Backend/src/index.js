@@ -8,6 +8,8 @@ import authRoutes from "./routes/auth.route.js";
 import adminRoutes from "./routes/admin.route.js";
 import pactRoutes from "./routes/pact.route.js";
 
+//TODO: Update all responses to specific pattern success, error_status, message
+
 dotenv.config();
 
 const PORT = process.env.PORT || 5000;

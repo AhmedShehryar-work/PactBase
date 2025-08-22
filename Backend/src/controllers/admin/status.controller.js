@@ -20,7 +20,7 @@ export const getUser = async (req, res) => {
             setuser = user;
 
             if (!user) {
-                return res.status(404).json({ error: "No users pending" });
+                return res.status(404).json({ success: false , message: "No users pending" });
             }
 
         });
@@ -33,14 +33,14 @@ export const getUser = async (req, res) => {
             `;
 
         if (!locked) {
-            return res.status(404).json({ error: "User not locked for activation" });
+            return res.status(404).json({ success: false , error: "User not locked for activation" });
         }
 
-        res.status(200).json({ success: true, setuser });
+        res.status(200).json({ success: true , setuser });
 
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Internal server error - Failed to activate user' });
+        res.status(500).json({ success: false , message: 'Internal server error - Failed to activate user' });
     }
 
 }
@@ -61,7 +61,7 @@ export const activate = async (req, res) => {
             `;
 
             if (!activatedUser) {
-                return res.status(404).json({ error: "User not found" });
+                return res.status(404).json({ success: false , message: "User not found" });
             }
 
             await sqlTx`
@@ -71,11 +71,11 @@ export const activate = async (req, res) => {
 
         });
 
-        res.status(200).json({ success: true});
+        res.status(200).json({ success: true , message: "User Activated"});
 
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Internal server error - Failed to activate user' });
+        res.status(500).json({ success: false , message: 'Internal server error - Failed to activate user' });
     }
 
 }
@@ -94,14 +94,14 @@ export const disable = async (req, res) => {
         `;
 
         if (!disabledUser) {
-            return res.status(404).json({ error: "User not found" });
+            return res.status(404).json({ success: false , message: "User not found" });
         }
 
-        res.status(200).json({ success: true});
+        res.status(200).json({ success: true , message: "User Disabled"});
 
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Internal server error - Failed to disable user' });
+        res.status(500).json({ success: false , message: 'Internal server error - Failed to disable user' });
     }
 
 }

@@ -14,7 +14,7 @@ export const signup = async (req, res) => {
         const normalizedEmail = email.toLowerCase();
 
         if (!fullName || !username || !email || !password || !cnicNo) {
-        return res.status(400).json({ message: "One or more feilds empty."});
+        return res.status(400).json({ success: false , message: "One or more feilds empty."});
         }
 
         const [result] = await Q`
@@ -26,7 +26,7 @@ export const signup = async (req, res) => {
         `;
 
         if (result?.cnic_exists) {
-        return res.status(400).json({ message: "Cnic already exists", error_status: "duplicate_cnic" });
+        return res.status(400).json({ success: false ,  message: "Cnic already exists", error_status: "duplicate_cnic" });
         }
 
         const [existingUsername] = await Q`
@@ -37,7 +37,7 @@ export const signup = async (req, res) => {
         `;
 
         if (existingUsername) {
-        return res.status(400).json({ message: "Username already exists", error_status: "duplicate_username" });
+        return res.status(400).json({ success: false , message: "Username already exists", error_status: "duplicate_username" });
         }
 
         // Check email
@@ -49,7 +49,7 @@ export const signup = async (req, res) => {
         `;
 
         if (existingEmail) {
-        return res.status(400).json({ message: "Email already exists", error_status: "duplicate_email" });
+        return res.status(400).json({ success: false , message: "Email already exists", error_status: "duplicate_email" });
         }
 
         const salt = await bcrypt.genSalt(10);
@@ -70,16 +70,16 @@ export const signup = async (req, res) => {
 
             });
 
-            res.status(201).json({ message: "User registered and pending verification"});
+            res.status(201).json({ success: true , message: "User registered and pending verification"});
 
         } catch (error) {
             console.error("Transaction error:", error);
-            res.status(500).json({ message: "Internal Server Error" });
+            res.status(500).json({ success: false , message: "Internal Server Error" });
         }
         
     } catch (error) {
         console.log("ERROR: ", error);
-        res.status(500).json({ message: "Internal Server Error" });
+        res.status(500).json({ success: false , message: "Internal Server Error" });
     }
 
 }
@@ -90,7 +90,7 @@ export const login = async (req, res) =>{
         const {username, password} = req.body;
 
         if (!username || !password) {
-            return res.status(400).json({ message: "One or more feild empty" });
+            return res.status(400).json({ success: false , message: "One or more feild empty" });
         }
 
         const normalizedUsername = username.toLowerCase();
@@ -105,14 +105,14 @@ export const login = async (req, res) =>{
         `;
 
         if (!user) {
-        return res.status(400).json({ message: "Invalid credentials" });
+        return res.status(400).json({ success: false , message: "Invalid credentials" });
         }
 
 
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
         if (!isPasswordCorrect) {
-        return res.status(400).json({ message: "Invalid credentials" });
+        return res.status(400).json({ success: false , message: "Invalid credentials" });
         }
 
         delete user.password; // a little overkill on the security maybe
@@ -134,18 +134,18 @@ export const login = async (req, res) =>{
                 });
 
             case "disabled":
-                return res.status(403).json({ message: "Account is disabled. Contact support.", error_status: "disabled" });
+                return res.status(403).json({ success: false , message: "Account is disabled. Contact support.", error_status: "disabled" });
 
             case "pending":
-                return res.status(403).json({ message: "Account pending approval.", error_status: "pending" });
+                return res.status(403).json({ success: false , message: "Account pending approval.", error_status: "pending" });
 
             default:
-                return res.status(400).json({ message: "Invalid account status" });
+                return res.status(400).json({ success: false , message: "Invalid account status" });
         }
 
     } catch (error) {
         console.log("ERROR: ", error);
-        res.status(500).json({ message: "Internal Server Error" });
+        res.status(500).json({ success: false , message: "Internal Server Error" });
     }
 
 }
@@ -156,7 +156,7 @@ export const check = async (req, res) =>{
         res.status(200).json(req.user);
     } catch (error) {
         console.log("Error in checkAuth controller", error.message);
-        res.status(500).json({ message: "Internal Server Error" });
+        res.status(500).json({ success: false , message: "Internal Server Error" });
     }
 
 }
@@ -167,7 +167,7 @@ export const logout = (req, res) => {
     const token = req.cookies.jwt;
         
     if(!token){
-        return res.status(401).json({message:"Who the hell are you to be logging out?! Like dying without ever being born"})
+        return res.status(401).json({ success: false , message:"Who the hell are you to be logging out?! Like dying without ever being born"})
     }
 
     res.cookie("jwt", "", {
@@ -176,9 +176,9 @@ export const logout = (req, res) => {
       sameSite: "strict",
       maxAge: 0
     });
-    res.status(200).json({ message: "Logged out successfully" });
+    res.status(200).json({ success: true , message: "Logged out successfully" });
   } catch (error) {
     console.log("Error in logout controller", error.message);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ success: false , message: "Internal Server Error" });
   }
 };
