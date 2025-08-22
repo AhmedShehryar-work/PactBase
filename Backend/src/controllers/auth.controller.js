@@ -133,11 +133,14 @@ export const login = async (req, res) =>{
                 created_at: user.created_at
                 });
 
-            case "disabled":
-                return res.status(403).json({ success: false , message: "Account is disabled. Contact support.", error_status: "disabled" });
-
             case "pending":
-                return res.status(403).json({ success: false , message: "Account pending approval.", error_status: "pending" });
+                return res.status(403).json({ success: false , message: "Your account is pending approval.", error_status: "pending" });
+
+            case "rejected":
+                return res.status(403).json({ success: false , message: "Some discrepancy was found when verifying your account. You may register again after 1 week with correct information.", error_status: "rejected" });
+            
+            case "disabled":
+                return res.status(403).json({ success: false , message: "Your account has been disabled.", error_status: "disabled" });
 
             default:
                 return res.status(400).json({ success: false , message: "Invalid account status" });

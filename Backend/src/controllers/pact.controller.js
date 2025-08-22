@@ -79,7 +79,7 @@ export const makePact = async (req, res) => {
 
     } catch (error) {
         console.log("Error in MakePact controller: ", error);
-        res.status(500).json({ success: false , message: "Internal Server Error", success: "false" });
+        res.status(500).json({ success: false , message: "Internal Server Error"});
     }
 
 }

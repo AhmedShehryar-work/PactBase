@@ -2,41 +2,28 @@ import Q from "../../config/db.js"
 
 export const getUser = async (req, res) => {
 
-    var setuser = null;
-
     try{
 
-        await Q.begin(async (sqlTx) => {
-
-            const [user] = await sqlTx`
-                SELECT *
-                FROM pending_users
-                WHERE locked = false
-                ORDER BY created_at ASC   -- oldest first (FIFO)
-                FOR UPDATE SKIP LOCKED
-                LIMIT 1;
-            `;
-
-            setuser = user;
-
-            if (!user) {
-                return res.status(404).json({ success: false , message: "No users pending" });
-            }
-
-        });
-
-        const [locked] = await Q`
+            const [user] = await Q`
                 UPDATE pending_users
                 SET locked = true
-                WHERE username = ${setuser.username}
-                RETURNING *
+                WHERE username = (
+                    SELECT username
+                    FROM pending_users
+                    WHERE locked = false
+                    ORDER BY created_at ASC
+                    FOR UPDATE SKIP LOCKED
+                    LIMIT 1
+                )
+                RETURNING *;
             `;
 
-        if (!locked) {
-            return res.status(404).json({ success: false , error: "User not locked for activation" });
-        }
+            if (!user) {
+                return res.status(200).json({ success: false , message: "No users pending" });
+            }
 
-        res.status(200).json({ success: true , setuser });
+
+        res.status(200).json({ success: true , user });
 
     } catch (error) {
         console.error(error);

@@ -10,7 +10,7 @@ const AdminPage = () => {
     try {
       setLoading(true);
       const res = await axios.post("http://localhost:4000/admin/user");
-      setUser(res.data.setuser);
+      setUser(res.data.user);
       setHasFetchedOnce(true);
     } catch (err) {
       console.error(err);
