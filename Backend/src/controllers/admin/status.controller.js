@@ -44,17 +44,17 @@ export const activate = async (req, res) => {
                 UPDATE users
                 SET status = 'active'
                 WHERE username = ${username}
-                RETURNING *
+                RETURNING username
             `;
-
-            if (!activatedUser) {
-                return res.status(404).json({ success: false , message: "User not found" });
-            }
 
             await sqlTx`
                 DELETE FROM pending_users
                 WHERE username = ${username}
             `;
+
+            if (!activatedUser) {
+                return res.status(404).json({ success: false , message: "User not found" });
+            }
 
         });
 
@@ -67,6 +67,42 @@ export const activate = async (req, res) => {
 
 }
 
+export const reject = async (req, res) => {
+
+    const {username} = req.body;
+
+    try{
+
+        await Q.begin(async (sqlTx) => {
+
+            const [rejectedUser] = await sqlTx`
+            UPDATE users
+            SET status = 'rejected'
+            WHERE username = ${username}
+            RETURNING username
+            `;
+
+            if (!rejectedUser) {
+            return res.status(404).json({ success: false , message: "User not found" });
+            }
+
+            await sqlTx`
+                DELETE FROM pending_users
+                WHERE username = ${username}
+            `;
+
+        });
+
+        res.status(200).json({ success: true , message: "User Rejected"});
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false , message: 'Internal server error - Failed to reject user' });
+    }
+
+}
+
+
 export const disable = async (req, res) => {
 
     const {username} = req.body;
@@ -77,7 +113,7 @@ export const disable = async (req, res) => {
         UPDATE users
         SET status = 'disabled'
         WHERE username = ${username}
-        RETURNING *
+        RETURNING username
         `;
 
         if (!disabledUser) {
