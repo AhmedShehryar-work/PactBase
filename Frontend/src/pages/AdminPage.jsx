@@ -32,16 +32,15 @@ const AdminPage = () => {
     }
   };
 
-  // const deactivateUser = async () => {
-  //   if (!user) return;
-  //   try {
-  //     await axios.patch(`http://localhost:4000/admin/deactivate`, {user_id: user.id});
-  //     setUser(null);
-  //   } catch (err) {
-  //     console.error(err);
-  //     alert("Error deactivating user");
-  //   }
-  // };
+  const rejectUser = async () => {
+    if (!user) return;
+    try {
+      await axios.patch(`http://localhost:4000/admin/reject`, {username: user.username});
+    } catch (err) {
+      console.error(err);
+      alert("Error Rejecting user");
+    }
+  };
 
   return (
     <div style={{
@@ -69,6 +68,9 @@ const AdminPage = () => {
           <div style={{ marginTop: "20px" }}>
             <button onClick={activateUser} style={{ backgroundColor: "green", color: "white",marginRight: "10px" }}>
               Activate
+            </button>
+            <button onClick={rejectUser} style={{ backgroundColor: "red", color: "white",marginRight: "10px" }}>
+              Reject
             </button>
           </div>
         </div>
