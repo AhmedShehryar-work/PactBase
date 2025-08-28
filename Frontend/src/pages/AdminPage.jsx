@@ -63,7 +63,8 @@ const AdminPage = () => {
 
       {user && (
         <div style={{ marginTop: "30px", padding: "20px", border: "1px solid #ccc" }}>
-          <h2>User CNIC: {loading ? "Loading..." : user.cnic_no}</h2>
+          <h2>Full Name: {loading ? "Loading..." : user.full_name}</h2>
+          <h2>CNIC: {loading ? "Loading..." : user.cnic_no}</h2>
           
           <div style={{ marginTop: "20px" }}>
             <button onClick={activateUser} style={{ backgroundColor: "green", color: "white",marginRight: "10px" }}>
