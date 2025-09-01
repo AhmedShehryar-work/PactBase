@@ -4,6 +4,4 @@
 
 A Real-World Project solving a real-world problem.
 
-this is just a note that
-phase 2 has started
-i.e. building the full project on the base
+Phase 2 was delayed and will be atarted soon
