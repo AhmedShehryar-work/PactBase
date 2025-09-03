@@ -8,6 +8,8 @@ export const signup = async (req, res) => {
 
     try {
 
+        //TODO: add file uplaod and storage to signup
+
         const {fullName, username, email, password, cnicNo} = req.body;
 
         const normalizedUsername = username.toLowerCase();

@@ -12,6 +12,7 @@ export default function RegistrationForm() {
     email: "",
     password: "",
     //profileImage: null,
+    //TODO: add file uploads
     cnicNo: "",
     //cnicFrontImage: null,
     //cnicBackImage: null,
@@ -72,7 +73,9 @@ export default function RegistrationForm() {
       {/* <div>
         <label>Profile Image:</label>
         <input type="file" name="profileImage" accept="image/jpeg, image/png, image/webp" capture="user" onChange={handleChange} required />
-      </div> */}
+      </div> */
+      //TODO: add file uploads
+      }
 
       <div>
         <label>CNIC Number:</label>
