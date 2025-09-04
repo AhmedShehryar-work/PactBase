@@ -70,19 +70,17 @@ export default function RegistrationForm() {
         <input type="password" name="password" value={formData.password} onChange={handleChange} required />
       </div>
 
-      {/* <div>
+      <div>
         <label>Profile Image:</label>
         <input type="file" name="profileImage" accept="image/jpeg, image/png, image/webp" capture="user" onChange={handleChange} required />
-      </div> */
-      //TODO: add file uploads
-      }
-
+      </div>
+      
       <div>
         <label>CNIC Number:</label>
         <input type="text" name="cnicNo" value={formData.cnicNo} onChange={handleChange} required />
       </div>
 
-      {/* <div>
+      <div>
         <label>CNIC Front Image:</label>
         <input type="file" name="cnicFrontImage" accept="image/jpeg, image/png, image/webp" capture="environment" onChange={handleChange} required />
       </div>
@@ -105,7 +103,7 @@ export default function RegistrationForm() {
       <div>
         <label>Test Image 3:</label>
         <input type="file" name="Image3" accept="image/jpeg, image/png, image/webp" onChange={handleChange} />
-      </div> */}
+      </div>
 
       <button type="submit">Register</button>
     </form>
