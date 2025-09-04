@@ -4,7 +4,7 @@
 
 A Real-World Project solving a real-world problem.
 
-Phase 2 was delayed and will be atarted soon
+Phase 2 is onto a gradual start
 
 ## 📦 Installation
 

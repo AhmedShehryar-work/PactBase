@@ -1,7 +1,6 @@
 import Q from "../config/db.js"
 import bcrypt from "bcryptjs";
 import { generateToken } from "../lib/utils.js";
-import { v4 as uid } from 'uuid';
 
 
 export const signup = async (req, res) => {
