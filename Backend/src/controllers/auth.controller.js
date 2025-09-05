@@ -9,7 +9,7 @@ export const signup = async (req, res) => {
 
         //TODO: add file uplaod and storage to signup
 
-        const {fullName, username, email, password, cnicNo} = req.body;
+        const {fullName, username, email, password, cnicNo, profileImage,cnicImageBack, cnicImageBack, Image1, Image2, Image3} = req.body;
 
         const normalizedUsername = username.toLowerCase();
         const normalizedEmail = email.toLowerCase();
