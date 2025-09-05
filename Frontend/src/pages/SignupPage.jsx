@@ -11,14 +11,13 @@ export default function RegistrationForm() {
     username: "",
     email: "",
     password: "",
-    //profileImage: null,
-    //TODO: add file uploads
+    profileImage: null,
     cnicNo: "",
-    //cnicFrontImage: null,
-    //cnicBackImage: null,
-    //Image1: null,
-    //Image2: null,
-    //Image3: null,
+    cnicFrontImage: null,
+    cnicBackImage: null,
+    Image1: null,
+    Image2: null,
+    Image3: null,
   });
 
   const handleChange = (e) => {
