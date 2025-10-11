@@ -46,5 +46,5 @@ app.use("/admin", adminRoutes);
 
 app.listen(PORT, () => {
   console.log("Server is running on PORT: " + PORT);
-  console.log(`${process.env.DATABASE_URI} 1`);
+  console.log(`${process.env.DATABASE_URI}`);
 });

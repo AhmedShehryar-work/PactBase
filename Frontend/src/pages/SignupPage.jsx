@@ -15,9 +15,9 @@ export default function RegistrationForm() {
     cnicNo: "",
     cnicFrontImage: null,
     cnicBackImage: null,
-    Image1: null,
-    Image2: null,
-    Image3: null,
+    image1: null,
+    image2: null,
+    image3: null,
   });
 
   const handleChange = (e) => {
@@ -91,17 +91,17 @@ export default function RegistrationForm() {
 
       <div>
         <label>Test Image 1:</label>
-        <input type="file" name="Image1" accept="image/jpeg, image/png, image/webp" onChange={handleChange} />
+        <input type="file" name="image1" accept="image/jpeg, image/png, image/webp" onChange={handleChange} />
       </div>
 
       <div>
         <label>Test Image 2:</label>
-        <input type="file" name="Image2" accept="image/jpeg, image/png, image/webp" onChange={handleChange} />
+        <input type="file" name="image2" accept="image/jpeg, image/png, image/webp" onChange={handleChange} />
       </div>
 
       <div>
         <label>Test Image 3:</label>
-        <input type="file" name="Image3" accept="image/jpeg, image/png, image/webp" onChange={handleChange} />
+        <input type="file" name="image3" accept="image/jpeg, image/png, image/webp" onChange={handleChange} />
       </div>
 
       <button type="submit">Register</button>
