@@ -91,8 +91,8 @@ export const signup = async (req, res) => {
                 `;
 
                 await sqlTx`
-                INSERT INTO pending_users (username, cnic_no, cnic_images, test_images)
-                VALUES (${normalizedUsername}, ${cnicNo}, ${JSON.stringify(cnic_images)}, ${JSON.stringify(test_images)})
+                INSERT INTO pending_users (username, full_name, cnic_images, test_images)
+                VALUES (${normalizedUsername}, ${fullName}, ${cnicNo}, ${JSON.stringify(cnic_images)}, ${JSON.stringify(test_images)})
                 `;
 
             });
