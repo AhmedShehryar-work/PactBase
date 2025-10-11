@@ -9,7 +9,7 @@ export const signup = async (req, res) => {
 
         //TODO: add file uplaod and storage to signup
 
-        const {fullName, username, email, password, cnicNo, profileImage,cnicImageFront, cnicImageBack, Image1, Image2, Image3} = req.body;
+        const {fullName, username, email, password, cnicNo} = req.body;
 
         const normalizedUsername = username.toLowerCase();
         const normalizedEmail = email.toLowerCase();
@@ -56,17 +56,43 @@ export const signup = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
+        const files = req.files || {};
+        const requiredFiles = ["profileImage", "image1", "image2", "image3", "cnicFront", "cnicBack"];
+        for (const field of requiredFiles) {
+            if (!files[field] || !files[field][0]) {
+                return res.status(400).json({ success: false, message: `Missing required file: ${field}` });
+            }
+        }
+
+        const profileImage = files.profileImage?.[0]?.path;
+        const cnicFront = files.cnicFront?.[0]?.path;
+        const cnicBack = files.cnicBack?.[0]?.path;
+        const image1 = files.image1?.[0]?.path;
+        const image2 = files.image2?.[0]?.path;
+        const image3 = files.image3?.[0]?.path;
+
+        const cnic_images = {
+            back: cnicBack,
+            front: cnicFront
+        }
+
+        const test_images = {
+            image1,
+            image2,
+            image3
+        }
+
         try {
             await Q.begin(async (sqlTx) => {
 
                 await sqlTx`
-                INSERT INTO users (full_name, username, email, password, cnic)
-                VALUES (${fullName}, ${normalizedUsername}, ${normalizedEmail}, ${hashedPassword}, ${cnicNo})
+                INSERT INTO users (full_name, username, email, password, cnic, profile_image)
+                VALUES (${fullName}, ${normalizedUsername}, ${normalizedEmail}, ${hashedPassword}, ${cnicNo}, ${profileImage})
                 `;
 
                 await sqlTx`
-                INSERT INTO pending_users (username, cnic_no)
-                VALUES (${normalizedUsername}, ${cnicNo})
+                INSERT INTO pending_users (username, cnic_no, cnic_images, test_images)
+                VALUES (${normalizedUsername}, ${cnicNo}, ${JSON.stringify(cnic_images)}, ${JSON.stringify(test_images)})
                 `;
 
             });
@@ -91,7 +117,7 @@ export const login = async (req, res) =>{
         const {username, password} = req.body;
 
         if (!username || !password) {
-            return res.status(400).json({ success: false , message: "One or more feild empty" });
+            return res.status(400).json({ success: false , message: "One or more fields empty" });
         }
 
         const normalizedUsername = username.toLowerCase();

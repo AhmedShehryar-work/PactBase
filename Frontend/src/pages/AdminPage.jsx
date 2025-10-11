@@ -65,7 +65,14 @@ const AdminPage = () => {
         <div style={{ marginTop: "30px", padding: "20px", border: "1px solid #ccc" }}>
           <h2>Full Name: {loading ? "Loading..." : user.full_name}</h2>
           <h2>CNIC: {loading ? "Loading..." : user.cnic_no}</h2>
-          
+          <h2>CNIC IMAGES</h2>
+          <img src={JSON.parse(user.cnic_images).front} alt="CNIC Front" />
+          <img src={JSON.parse(user.cnic_images).back} alt="CNIC Back" />
+          <h2>TEST IMAGES</h2>
+          <img src={JSON.parse(user.test_images).image1} alt="Test Image 1" />
+          <img src={JSON.parse(user.test_images).image2} alt="Test Image 2" />
+          <img src={JSON.parse(user.test_images).image3} alt="Test Image 3" />
+
           <div style={{ marginTop: "20px" }}>
             <button onClick={activateUser} style={{ backgroundColor: "green", color: "white",marginRight: "10px" }}>
               Activate

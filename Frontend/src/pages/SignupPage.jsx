@@ -13,8 +13,8 @@ export default function RegistrationForm() {
     password: "",
     profileImage: null,
     cnicNo: "",
-    cnicFrontImage: null,
-    cnicBackImage: null,
+    cnicFront: null,
+    cnicBack: null,
     image1: null,
     image2: null,
     image3: null,
@@ -81,12 +81,12 @@ export default function RegistrationForm() {
 
       <div>
         <label>CNIC Front Image:</label>
-        <input type="file" name="cnicFrontImage" accept="image/jpeg, image/png, image/webp" capture="environment" onChange={handleChange} required />
+        <input type="file" name="cnicFront" accept="image/jpeg, image/png, image/webp" capture="environment" onChange={handleChange} required />
       </div>
 
       <div>
         <label>CNIC Back Image:</label>
-        <input type="file" name="cnicBackImage" accept="image/jpeg, image/png, image/webp" capture="environment" onChange={handleChange} required />
+        <input type="file" name="cnicBack" accept="image/jpeg, image/png, image/webp" capture="environment" onChange={handleChange} required />
       </div>
 
       <div>
