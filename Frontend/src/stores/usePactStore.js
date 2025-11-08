@@ -22,7 +22,7 @@ export const usePactStore = create((set) => ({
 
   isMakingPact: false,
   madePactId: "",
-  userBlocked: false,
+  isBlocked: false,
 
   makePact: async (data) => {
     try {
