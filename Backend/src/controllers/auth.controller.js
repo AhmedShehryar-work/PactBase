@@ -18,7 +18,7 @@ export const signup = async (req, res) => {
         return res.status(400).json({ success: false , message: "One or more feilds empty."});
         }
 
-        const [result] = await Q`
+        const [cnicExists] = await Q`
             SELECT (
                 EXISTS (SELECT 1 FROM users WHERE cnic = ${cnicNo})
                 OR
@@ -26,32 +26,48 @@ export const signup = async (req, res) => {
             ) AS cnic_exists
         `;
 
-        if (result?.cnic_exists) {
-        return res.status(400).json({ success: false ,  message: "Cnic already exists", error_status: "duplicate_cnic" });
+        if (cnicExists?.cnic_exists) {
+        return res.status(400).json({
+            success: false ,
+            message: "Cnic already exists",
+            error_status: "duplicate_cnic"
+        });
         }
 
-        const [existingUsername] = await Q`
-            SELECT username
-            FROM users
-            WHERE username = ${normalizedUsername}
-            LIMIT 1
+        // Check username
+        const [usernameCheck] = await Q`
+            SELECT EXISTS(
+                SELECT 1
+                FROM users
+                WHERE username = ${normalizedUsername}
+            ) AS exists
         `;
 
-        if (existingUsername) {
-        return res.status(400).json({ success: false , message: "Username already exists", error_status: "duplicate_username" });
+        if (usernameCheck.exists) {
+            return res.status(400).json({
+                success: false,
+                message: "Username already exists",
+                error_status: "duplicate_username"
+            });
         }
 
         // Check email
-        const [existingEmail] = await Q`
-            SELECT username
-            FROM users
-            WHERE email = ${normalizedEmail}
-            LIMIT 1
+        const [emailCheck] = await Q`
+            SELECT EXISTS(
+                SELECT 1
+                FROM users
+                WHERE email = ${normalizedEmail}
+            ) AS exists
         `;
 
-        if (existingEmail) {
-        return res.status(400).json({ success: false , message: "Email already exists", error_status: "duplicate_email" });
+        if (emailCheck.exists) {
+            return res.status(400).json({
+                success: false,
+                message: "Email already exists",
+                error_status: "duplicate_email"
+            });
         }
+
 
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);

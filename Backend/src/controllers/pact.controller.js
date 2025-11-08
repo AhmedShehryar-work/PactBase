@@ -48,24 +48,48 @@ export const makePact = async (req, res) => {
         
         const pactId = uid();
 
+        try{
+
+            const [blockedCheck] = await Q`
+                SELECT EXISTS(
+                    SELECT 1
+                    FROM users
+                    WHERE username = ${from}
+                    AND blocked_by && ${to}::text[]
+                ) AS is_blocked
+            `;
+
+            if (blockedCheck.is_blocked) {
+                res.status(400).json({
+                    success: false,
+                    message: "User blocked by one or more recipients",
+                    error_status: "blocked"
+                });
+            }
+
+        } catch (error){
+            console.log("Error in blocked_by check in query in makePact: ", error);
+            res.status(500).json({ success: false , message: "Error in query for makePactError in blocked_by check in query in makePact: "});
+        }
+
         try {
             await Q.begin(async (sqlTx) => {
 
                 await sqlTx`
-                INSERT INTO pacts (id, title, conditions, "from", "to", requested)
-                VALUES (${pactId}, ${title}, ${conditions}, ${from}, ${to}, true)
+                    INSERT INTO pacts (id, title, conditions, "from", "to", requested)
+                    VALUES (${pactId}, ${title}, ${conditions}, ${from}, ${to}, true)
                 `;
 
                 await sqlTx`
-                UPDATE users
-                SET pacts_made = array_append(pacts_made, ${pactId})
-                WHERE username = ${from}
+                    UPDATE users
+                    SET pacts_made = array_append(pacts_made, ${pactId})
+                    WHERE username = ${from}
                 `;
 
                 await sqlTx`
-                UPDATE users
-                SET pacts_received = array_append(pacts_received, ${pactId})
-                WHERE username = ANY(${to}::text[]);
+                    UPDATE users
+                    SET pacts_received = array_append(pacts_received, ${pactId})
+                    WHERE username = ANY(${to}::text[]);
                 `;
 
             });
