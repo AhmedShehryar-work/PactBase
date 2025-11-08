@@ -60,7 +60,7 @@ export const makePact = async (req, res) => {
             `;
 
             if (blockedCheck.is_blocked) {
-                res.status(400).json({
+                return res.status(400).json({
                     success: false,
                     message: "User blocked by one or more recipients",
                     error_status: "blocked"

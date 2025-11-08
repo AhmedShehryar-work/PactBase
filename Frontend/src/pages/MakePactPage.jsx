@@ -3,7 +3,7 @@ import { usePactStore } from "../stores/usePactStore";
 import { useAuthStore } from "../stores/useAuthStore";
 
 export default function MakePactForm() {
-  const { isMakingPact, makePact, madePactId } = usePactStore();
+  const { isMakingPact, makePact, madePactId, userBlocked } = usePactStore();
   const { authUser } = useAuthStore();
 
   const [title, setTitle] = useState("");
@@ -33,9 +33,8 @@ export default function MakePactForm() {
         title,
         conditions,
         from: authUser.username, // auto-filled
-        to: toUsersLower,             // array of usernames
+        to: toUsersLower,        // array of usernames
       });
-      alert("Pact created successfully!");
       setTitle("");
       setConditions("");
       setToUsers([]);
@@ -146,6 +145,7 @@ export default function MakePactForm() {
         </button>
       </form>
       {madePactId ? `Share and use this PactId for this Pact: ${madePactId}` : ""}
+      {userBlocked && "You are blocked by one or more recipients"}
     </div>
   );
 }
