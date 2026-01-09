@@ -23,9 +23,8 @@ const AdminPage = () => {
   const activateUser = async () => {
     if (!user) return;
     try {
-      await axios.patch(`http://localhost:4000/admin/activate`, {username: user.username});
+      await axios.patch(`http://localhost:4000/admin/activate`, { username: user.username });
       setUser(null);
-
     } catch (err) {
       console.error(err);
       alert("Error activating user");
@@ -35,49 +34,121 @@ const AdminPage = () => {
   const rejectUser = async () => {
     if (!user) return;
     try {
-      await axios.patch(`http://localhost:4000/admin/reject`, {username: user.username});
+      await axios.patch(`http://localhost:4000/admin/reject`, { username: user.username });
+      setUser(null);
     } catch (err) {
       console.error(err);
-      alert("Error Rejecting user");
+      alert("Error rejecting user");
     }
   };
 
   return (
-    <div style={{
-      maxWidth: "500px",
-      margin: "50px auto",
-      textAlign: "center",
-      fontFamily: "sans-serif"
-    }}>
-      <h1>Admin Panel</h1>
+    <div
+      style={{
+        maxWidth: "600px",
+        margin: "50px auto",
+        fontFamily: "Arial, sans-serif",
+        textAlign: "center",
+        backgroundColor: "#f0f8ff", // light blue background
+        padding: "20px",
+        borderRadius: "12px",
+        boxShadow: "0 8px 20px rgba(0,0,0,0.1)"
+      }}
+    >
+      <h1 style={{ color: "#0077b6", marginBottom: "20px" }}>Admin Panel</h1>
 
-      {!hasFetchedOnce ? (
-        <button onClick={getUser} disabled={loading}>
-          {loading ? "Loading..." : "Get User"}
-        </button>
-      ) : (
-        <button onClick={getUser} disabled={loading}>
-          {loading ? "Loading..." : "Get Next User"}
-        </button>
-      )}
+      <button
+        onClick={getUser}
+        disabled={loading}
+        style={{
+          padding: "10px 20px",
+          fontSize: "16px",
+          borderRadius: "8px",
+          border: "none",
+          cursor: loading ? "not-allowed" : "pointer",
+          backgroundColor: "#0077b6",
+          color: "white",
+          transition: "all 0.2s",
+        }}
+      >
+        {loading ? "Loading..." : !hasFetchedOnce ? "Get User" : "Get Next User"}
+      </button>
 
       {user && (
-        <div style={{ marginTop: "30px", padding: "20px", border: "1px solid #ccc" }}>
-          <h2>Full Name: {loading ? "Loading..." : user.full_name}</h2>
-          <h2>CNIC: {loading ? "Loading..." : user.cnic_no}</h2>
-          <h2>CNIC IMAGES</h2>
-          <img src={JSON.parse(user.cnic_images).front} alt="CNIC Front" />
-          <img src={JSON.parse(user.cnic_images).back} alt="CNIC Back" />
-          <h2>TEST IMAGES</h2>
-          <img src={JSON.parse(user.test_images).image1} alt="Test Image 1" />
-          <img src={JSON.parse(user.test_images).image2} alt="Test Image 2" />
-          <img src={JSON.parse(user.test_images).image3} alt="Test Image 3" />
+        <div
+          style={{
+            marginTop: "30px",
+            padding: "20px",
+            borderRadius: "12px",
+            border: "1px solid #b0c4de",
+            backgroundColor: "#e0f7fa",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.05)"
+          }}
+        >
+          <h2 style={{ color: "#023e8a" }}>Full Name: {user.full_name}</h2>
+          <h2 style={{ color: "#023e8a" }}>CNIC: {user.cnic_no}</h2>
 
-          <div style={{ marginTop: "20px" }}>
-            <button onClick={activateUser} style={{ backgroundColor: "green", color: "white",marginRight: "10px" }}>
+          <h3 style={{ marginTop: "15px", color: "#0077b6" }}>CNIC Images</h3>
+          <div style={{ display: "flex", justifyContent: "center", gap: "10px", flexWrap: "wrap" }}>
+            <img
+              src={JSON.parse(user.cnic_images).front}
+              alt="CNIC Front"
+              style={{ width: "120px", borderRadius: "8px", border: "1px solid #b0c4de" }}
+            />
+            <img
+              src={JSON.parse(user.cnic_images).back}
+              alt="CNIC Back"
+              style={{ width: "120px", borderRadius: "8px", border: "1px solid #b0c4de" }}
+            />
+          </div>
+
+          <h3 style={{ marginTop: "15px", color: "#0077b6" }}>Test Images</h3>
+          <div style={{ display: "flex", justifyContent: "center", gap: "10px", flexWrap: "wrap" }}>
+            <img
+              src={JSON.parse(user.test_images).image1}
+              alt="Test Image 1"
+              style={{ width: "120px", borderRadius: "8px", border: "1px solid #b0c4de" }}
+            />
+            <img
+              src={JSON.parse(user.test_images).image2}
+              alt="Test Image 2"
+              style={{ width: "120px", borderRadius: "8px", border: "1px solid #b0c4de" }}
+            />
+            <img
+              src={JSON.parse(user.test_images).image3}
+              alt="Test Image 3"
+              style={{ width: "120px", borderRadius: "8px", border: "1px solid #b0c4de" }}
+            />
+          </div>
+
+          <div style={{ marginTop: "25px", display: "flex", justifyContent: "center", gap: "15px" }}>
+            <button
+              onClick={activateUser}
+              style={{
+                backgroundColor: "#00b894",
+                color: "white",
+                padding: "10px 20px",
+                borderRadius: "8px",
+                border: "none",
+                cursor: "pointer",
+                fontWeight: "bold"
+              }}
+            >
               Activate
             </button>
-            <button onClick={rejectUser} style={{ backgroundColor: "red", color: "white",marginRight: "10px" }}>
+
+            <button
+              onClick={rejectUser}
+              style={{
+                backgroundColor: "#d63031",
+                color: "white",
+                padding: "10px 20px",
+                borderRadius: "8px",
+                border: "none",
+                cursor: "pointer",
+                fontWeight: "bold"
+              }}
+            >
               Reject
             </button>
           </div>

@@ -26,9 +26,13 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
       {/* Brand Header */}
-      <h1 className="text-5xl font-bold text-[#0b0a1f] mb-8 font-serif">
+      <motion.h1 className="text-4xl sm:text-5xl font-extrabold text-[#0b0a1f] mb-8 font-sans tracking-tight"
+        initial={{ opacity: 0, y: +7 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: .8 }}
+      >
         PactBase
-      </h1>
+      </motion.h1>
 
       {/* Login Card */}
       <motion.div
@@ -76,9 +80,9 @@ export default function LoginPage() {
 
           <motion.button
             type="submit"
-            className="mt-4 px-6 py-3 rounded-lg bg-[#0b0a1f] text-white font-semibold hover:bg-[#0a063d] transition"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            className="mt-4 px-6 py-3 rounded-lg bg-[#0b0a1f] text-white font-semibold hover:bg-[#111024] active:bg-[#0c0c1a] transition"
+            whileHover={{ scale: 1.02}}
+            whileTap={{ scale: 0.98}}
             disabled={isLoggingIn}
           >
             {isLoggingIn ? "Logging in..." : "Login"}
@@ -87,7 +91,10 @@ export default function LoginPage() {
 
         <p className="mt-6 text-center text-gray-600">
           Don’t have an account?{" "}
-          <span className="underline cursor-pointer text-[#0a063d]">
+          <span
+            className="underline cursor-pointer text-[#0a063d]"
+            onClick={() => navigate("/signup")}
+          >
             Sign up
           </span>
         </p>

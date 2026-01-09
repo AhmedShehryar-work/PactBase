@@ -1,7 +1,8 @@
 import SignUpPage from "./pages/SignupPage";
 import AdminPage from "./pages/AdminPage";
 import LoginPage from "./pages/LoginPage";
-import HomePage from "./pages/HomePage"
+import LandingPage from "./pages/LandingPage";
+import Dashboard from "./pages/Dashboard";
 import PageNotFound from "./pages/PageNotFound";
 import SearchPage from "./pages/SearchPage"
 import MakePactPage from "./pages/MakePactPage"
@@ -47,12 +48,17 @@ const App = () => {
       </nav>
 
       <Routes>
-        <Route path="/" element={authUser ? <HomePage /> : <Navigate to="/login" />}/>
+        <Route path="/" element={<LandingPage />}/>
+
+        <Route path="/signin" element={authUser ? <Dashboard /> : <Navigate to="/login" />}/>
+
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/search-pact" element={<SearchPage />} />
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/signup" element={!authUser ? <SignUpPage /> : <Navigate to="/" />} />
         <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to="/" />} />
         <Route path="/make-pact" element={authUser ? <MakePactPage /> : <Navigate to="/login" />}/>
+
         <Route path="/*" element={<PageNotFound />} />
       </Routes>
     </Router>
