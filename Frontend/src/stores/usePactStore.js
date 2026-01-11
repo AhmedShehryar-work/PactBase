@@ -27,7 +27,7 @@ export const usePactStore = create((set) => ({
   makePact: async (data) => {
     try {
       set({ isMakingPact: true });
-      const res = await axios.post("http://localhost:4000/api/pact/make-pact", data,  { withCredentials: true });
+      const res = await axios.post("http://localhost:4000/api/pact/make-pact", data, { withCredentials: true });
       set({
         madePactId: res.data?.id
       });
@@ -40,7 +40,16 @@ export const usePactStore = create((set) => ({
     } finally {
       set({ isMakingPact: false });
     }
+  },
+
+  fulfillPact: async (pactId) => {
+  try {
+    const res = await axios.post(`http://localhost:4000/api/pact/fulfill`, { pactId },  { withCredentials: true });
+    set({ searchedPact: res.data }); // update the pact in store
+  } catch (err) {
+    console.error("Error marking pact as fulfilled:", err);
   }
+}
 
 
 }));

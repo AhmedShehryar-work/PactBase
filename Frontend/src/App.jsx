@@ -6,6 +6,8 @@ import Dashboard from "./pages/Dashboard";
 import PageNotFound from "./pages/PageNotFound";
 import SearchPage from "./pages/SearchPage"
 import MakePactPage from "./pages/MakePactPage"
+import ViewPactPage from "./pages/ViewPactPage"
+import ViewUserPage from "./pages/ViewUserPage"
 
 import {BrowserRouter as Router, Routes, Route, Link, Navigate} from "react-router-dom";
 import { useEffect } from "react";
@@ -51,14 +53,14 @@ const App = () => {
         <Route path="/" element={<LandingPage />}/>
 
         <Route path="/signin" element={authUser ? <Dashboard /> : <Navigate to="/login" />}/>
-
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/pact" element={<ViewPactPage/>} />
+        <Route path="/user" element={<ViewUserPage/>} />
+        <Route path="/dashboard" element={authUser ? <Dashboard /> : <Navigate to="/login" />} />
         <Route path="/search-pact" element={<SearchPage />} />
         <Route path="/admin" element={<AdminPage />} />
-        <Route path="/signup" element={!authUser ? <SignUpPage /> : <Navigate to="/" />} />
-        <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to="/" />} />
+        <Route path="/signup" element={!authUser ? <SignUpPage /> : <Navigate to="/dashboard" />} />
+        <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to="/dashboard" />} />
         <Route path="/make-pact" element={authUser ? <MakePactPage /> : <Navigate to="/login" />}/>
-
         <Route path="/*" element={<PageNotFound />} />
       </Routes>
     </Router>

@@ -19,7 +19,7 @@ export default function LoginPage() {
     e.preventDefault();
     await login(formData);
     if (loginSuccess) {
-      navigate("/");
+      navigate("/dashboard");
     }
   };
 

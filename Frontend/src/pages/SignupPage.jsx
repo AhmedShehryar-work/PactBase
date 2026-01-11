@@ -157,7 +157,7 @@ export default function RegistrationForm() {
             type="submit"
             className="w-full mt-6 px-6 py-3 rounded-lg bg-[#0b0a1f] text-white font-semibold hover:bg-[#111024] transition"
             whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.97 }}
+            whileTap={{ scale: 0.98 }}
           >
             Register
           </motion.button>

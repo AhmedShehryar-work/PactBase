@@ -107,3 +107,25 @@ export const makePact = async (req, res) => {
     }
 
 }
+
+export const fulfillPact = async (req, res) => {
+  const { pactId } = req.body;
+  const username = req.user.username;
+
+  try {
+    const [pact] = await Q`SELECT * FROM pacts WHERE id = ${pactId}`;
+    if (!pact) return res.status(404).json({ message: "Pact not found" });
+
+    // Only the 'from' user can mark it as fulfilled
+    if (pact.from !== username) 
+      return res.status(403).json({ message: "Only the creator can mark this pact as fulfilled" });
+
+    await Q`UPDATE pacts SET status = 'fulfilled', updated_at = now() WHERE id = ${pactId}`;
+
+    const [updatedPact] = await Q`SELECT * FROM pacts WHERE id = ${pactId}`;
+    res.json({ pact: updatedPact });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

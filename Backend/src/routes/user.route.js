@@ -2,7 +2,7 @@ import express from "express";
 import multer from "multer";
 import rateLimit from "express-rate-limit";
 
-import { changePassword, verifyEmail } from "../controllers/user.controller.js";
+import { getUser, changePassword, verifyEmail } from "../controllers/user.controller.js";
 import protectRoute from "../middleware/protectRoute.js";
 
 const upload = multer();
@@ -17,5 +17,6 @@ const majorActionsLimiter = rateLimit({
 
 router.post("/verify-email", upload.none(), majorActionsLimiter, protectRoute, verifyEmail); // for LoggedIn users only
 router.post("/change-password", upload.none(), majorActionsLimiter, protectRoute, changePassword);
+router.get("/get-user", upload.none(), getUser);
 
 export default router;

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useEffect } from "react";
 import { motion } from "motion/react";
 import { usePactStore } from "../stores/usePactStore";
 import { useAuthStore } from "../stores/useAuthStore";
@@ -11,6 +12,14 @@ export default function MakePactForm() {
   const [conditions, setConditions] = useState("");
   const [toUsers, setToUsers] = useState([]);
   const [toInput, setToInput] = useState("");
+
+  useEffect(() => {
+    if (madePactId) {
+      navigator.clipboard.writeText(madePactId)
+        .then(() => console.log("Pact ID copied to clipboard"))
+        .catch((err) => console.error("Failed to copy Pact ID:", err));
+    }
+  }, [madePactId]);
 
   const handleAddTo = () => {
     const cleaned = toInput.toLowerCase().replace(/\s+/g, "");
@@ -58,7 +67,7 @@ export default function MakePactForm() {
           Make a Pact
         </h2>
         <p className="text-gray-600 text-center mb-8">
-          Create a secure agreement between trusted parties.
+          Create a secure agreement between parties.
         </p>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -74,7 +83,10 @@ export default function MakePactForm() {
 
           {/* Conditions */}
           <textarea
-            placeholder="Conditions (optional)"
+            placeholder="Conditions (optional).
+            Instructions:
+            - Be as specific, thorough and detailed as possible.
+            - You can tag users as such @<username>"
             value={conditions}
             onChange={(e) => setConditions(e.target.value)}
             rows={5}
@@ -135,16 +147,30 @@ export default function MakePactForm() {
           </button>
 
           {madePactId && (
-            <p className="text-green-600 text-center font-medium">
-              Pact created! ID: {madePactId}
-            </p>
-          )}
+            <div className="mt-4 flex items-center justify-center gap-2">
+              <p className="text-green-600 font-medium">
+                Pact created! ID: {madePactId}
+              </p>
+              <button
+                type="button"
+                onClick={() => navigator.clipboard.writeText(madePactId)}
+                className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 transition"
+                title="Copy Pact ID"
+              >
+                Copy
+              </button>
+            </div>
+          )
+          }
 
           {isBlocked && (
             <p className="text-red-600 text-center font-medium">
               You are blocked by one or more recipients.
             </p>
           )}
+
+          
+
         </form>
       </motion.div>
     </div>

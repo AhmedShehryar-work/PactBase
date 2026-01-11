@@ -73,14 +73,13 @@ export const signup = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
 
         const files = req.files || {};
-        const requiredFiles = ["profileImage", "image1", "image2", "image3", "cnicFront", "cnicBack"];
+        const requiredFiles = ["image1", "image2", "image3", "cnicFront", "cnicBack"];
         for (const field of requiredFiles) {
             if (!files[field] || !files[field][0]) {
                 return res.status(400).json({ success: false, message: `Missing required file: ${field}` });
             }
         }
 
-        const profileImage = files.profileImage?.[0]?.path;
         const cnicFront = files.cnicFront?.[0]?.path;
         const cnicBack = files.cnicBack?.[0]?.path;
         const image1 = files.image1?.[0]?.path;
@@ -102,12 +101,12 @@ export const signup = async (req, res) => {
             await Q.begin(async (sqlTx) => {
 
                 await sqlTx`
-                INSERT INTO users (full_name, username, email, password, cnic, profile_image)
-                VALUES (${fullName}, ${normalizedUsername}, ${normalizedEmail}, ${hashedPassword}, ${cnicNo}, ${profileImage})
+                INSERT INTO users (full_name, username, email, password, cnic)
+                VALUES (${fullName}, ${normalizedUsername}, ${normalizedEmail}, ${hashedPassword}, ${cnicNo})
                 `;
 
                 await sqlTx`
-                INSERT INTO pending_users (username, full_name, cnic_images, test_images)
+                INSERT INTO pending_users (username, full_name, cnic_no, cnic_images, test_images)
                 VALUES (${normalizedUsername}, ${fullName}, ${cnicNo}, ${JSON.stringify(cnic_images)}, ${JSON.stringify(test_images)})
                 `;
 
