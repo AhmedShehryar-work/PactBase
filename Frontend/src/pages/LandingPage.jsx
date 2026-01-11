@@ -18,13 +18,13 @@ export default function LandingPage() {
         </motion.h1>
 
         <motion.h5
-  className="text-xl sm:text-2xl font-semibold mb-6 text-[#0b0a1f] leading-snug"
-  initial={{ opacity: 0, y: -30 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 1 }}
->
-  <span className="text-[#0a063d]">Promises</span> Etched Onto Eternity
-</motion.h5>
+          className="text-xl sm:text-2xl font-semibold mb-6 text-[#0b0a1f] leading-snug"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+        >
+          <span className="text-[#0a063d]">Promises</span> Etched Onto Eternity
+        </motion.h5>
 
 
         <motion.p
