@@ -22,12 +22,19 @@ export default function MakePactForm() {
   }, [madePactId]);
 
   const handleAddTo = () => {
-    const cleaned = toInput.toLowerCase().replace(/\s+/g, "");
-    if (cleaned && !toUsers.includes(cleaned)) {
-      setToUsers([...toUsers, cleaned]);
-      setToInput("");
+    // Split input by commas
+    const names = toInput.split(",").map(name => name.trim()).filter(Boolean);
+
+    // Filter out names already in the list
+    const newNames = names.filter(name => !toUsers.includes(name.toLowerCase()));
+
+    if (newNames.length > 0) {
+      // Add all new names to the list
+      setToUsers([...toUsers, ...newNames.map(n => n.toLowerCase().replace(/\s+/g, ""))]);
+      setToInput(""); // clear input
     }
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -58,7 +65,7 @@ export default function MakePactForm() {
   return (
     <div className="flex justify-center p-6">
       <motion.div
-        className="bg-white w-full max-w-xl p-10 rounded-2xl shadow-2xl"
+        className="bg-white w-full max-w-3xl p-10 rounded-2xl shadow-2xl" // changed max-w-xl -> max-w-3xl
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
@@ -86,7 +93,7 @@ export default function MakePactForm() {
             placeholder="Conditions (optional).
             Instructions:
             - Be as specific, thorough and detailed as possible.
-            - You can tag users as such @<username>"
+            - You can tag users as such: @username"
             value={conditions}
             onChange={(e) => setConditions(e.target.value)}
             rows={5}
@@ -105,7 +112,7 @@ export default function MakePactForm() {
           <div className="flex gap-2">
             <input
               type="text"
-              placeholder="Add recipient username"
+              placeholder="Add recipient username(s): Ali, David"
               value={toInput}
               onChange={(e) => setToInput(e.target.value)}
               className="flex-1 px-4 py-3 rounded-lg border-2 border-[#0a063d] focus:border-[#0b0a1f] outline-none"
@@ -119,13 +126,16 @@ export default function MakePactForm() {
             </button>
           </div>
 
-          {/* To Users */}
+          {/* To Users*/}
           {toUsers.length > 0 && (
             <div className="flex flex-wrap gap-2">
               {toUsers.map((user, i) => (
                 <span
                   key={i}
-                  className="px-3 py-1 bg-gray-200 rounded-full text-sm"
+                  onClick={() => {
+                    setToUsers(toUsers.filter(u => u !== user));
+                  }}
+                  className="px-3 py-1 bg-gray-200 rounded-full text-sm hover:cursor-pointer hover:bg-[#ff5233]"
                 >
                   {user}
                 </span>
@@ -160,19 +170,16 @@ export default function MakePactForm() {
                 Copy
               </button>
             </div>
-          )
-          }
+          )}
 
           {isBlocked && (
             <p className="text-red-600 text-center font-medium">
               You are blocked by one or more recipients.
             </p>
           )}
-
-          
-
         </form>
       </motion.div>
     </div>
+
   );
 }

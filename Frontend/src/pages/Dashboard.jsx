@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { usePactStore } from "../stores/usePactStore";
 
 import MakePactForm from "./MakePactPage";
+import MyPactsPage from "./MyPactsPage";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("myPacts"); // Default tab changed
@@ -67,16 +68,7 @@ export default function Dashboard() {
 
           {activeTab === "searchPact" && <PactSearch/>}
 
-          {activeTab === "myPacts" && (
-            <>
-              <h2 className="text-2xl font-bold text-[#0b0a1f] mb-4">
-                My Pacts
-              </h2>
-              <p className="text-gray-700">
-                View all pacts you have created or participated in.
-              </p>
-            </>
-          )}
+          {activeTab === "myPacts" && <MyPactsPage/>}
       </main>
       
       <button

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { create } from "zustand";
 
-export const usePactStore = create((set) => ({
+export const usePactStore = create((set, get) => ({
 
   isSearchingPact: false,
   searchedPact: null,
@@ -34,7 +34,7 @@ export const usePactStore = create((set) => ({
     } catch (error) {
       set({
         madePactId: null,
-        userBlocked: error.response.data?.error_status == "blocked"
+        isBlocked: error.response?.data?.error_status === "blocked"
       });
       console.log("Error in searchPact:", error);
     } finally {
@@ -42,14 +42,66 @@ export const usePactStore = create((set) => ({
     }
   },
 
+  fulfillingPact: false,  // new state
+
   fulfillPact: async (pactId) => {
-  try {
-    const res = await axios.post(`http://localhost:4000/api/pact/fulfill`, { pactId },  { withCredentials: true });
-    set({ searchedPact: res.data }); // update the pact in store
-  } catch (err) {
-    console.error("Error marking pact as fulfilled:", err);
+    try {
+      set({ fulfillingPact: true });
+      const res = await axios.post(`http://localhost:4000/api/pact/fulfill`, { pactId },  { withCredentials: true });
+      set({ searchedPact: res.data?.pact });
+    } catch (err) {
+      console.error("Error marking pact as fulfilled:", err);
+      throw err; // rethrow so UI can handle
+    } finally {
+      set({ fulfillingPact: false });
+    }
+  },
+
+
+  myPacts: [],
+  isLoadingMyPacts: false,
+  hasMoreMyPacts: true,
+  myPactsPage: 1,
+
+  resetMyPacts: () =>
+  set({
+    myPacts: [],
+    myPactsPage: 1,
+    hasMoreMyPacts: true,
+  }),
+
+
+  getMyPacts: async ({ type, search = "" }) => {
+    const { myPactsPage, myPacts, hasMoreMyPacts } = get();
+    if (!hasMoreMyPacts) return;
+
+    try {
+      set({ isLoadingMyPacts: true });
+
+      const res = await axios.get(
+        "http://localhost:4000/api/pact/my-pacts",
+        {
+          params: {
+            type,
+            page: myPactsPage,
+            limit: 10,
+            search,
+          },
+          withCredentials: true,
+        }
+      );
+
+      set({
+        myPacts: [...myPacts, ...res.data.pacts],
+        hasMoreMyPacts: res.data.hasMore,
+        myPactsPage: myPactsPage + 1,
+      });
+    } catch (err) {
+      console.error("getMyPacts error:", err);
+    } finally {
+      set({ isLoadingMyPacts: false });
+    }
   }
-}
 
 
 }));

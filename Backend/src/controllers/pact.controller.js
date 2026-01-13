@@ -113,19 +113,97 @@ export const fulfillPact = async (req, res) => {
   const username = req.user.username;
 
   try {
+    // Fetch pact
     const [pact] = await Q`SELECT * FROM pacts WHERE id = ${pactId}`;
     if (!pact) return res.status(404).json({ message: "Pact not found" });
 
-    // Only the 'from' user can mark it as fulfilled
+    // Only creator can mark as fulfilled
     if (pact.from !== username) 
       return res.status(403).json({ message: "Only the creator can mark this pact as fulfilled" });
 
+    // Update pact status
     await Q`UPDATE pacts SET status = 'fulfilled', updated_at = now() WHERE id = ${pactId}`;
 
+    // Increment fulfilled count for each recipient
+    const toUsers = pact.to; // If column type is text[] in Postgres
+    if (toUsers && toUsers.length > 0) {
+      for (const user of toUsers) {
+        await Q`UPDATE users SET pacts_fulfilled = COALESCE(pacts_fulfilled, 0) + 1 WHERE username = ${user}`;
+      }
+    }
+
+    // Return updated pact
     const [updatedPact] = await Q`SELECT * FROM pacts WHERE id = ${pactId}`;
     res.json({ pact: updatedPact });
   } catch (err) {
-    console.error(err);
+    console.error("fulfillPact error:", err);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+
+export const getMyPacts = async (req, res) => {
+  const username = req.user.username;
+  const { type = "made", page = 1, limit = 10, search = "" } = req.query;
+
+  try {
+    if (type !== "made" && type !== "received") {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid pact type",
+      });
+    }
+
+    const offset = (Number(page) - 1) * Number(limit);
+
+    const [user] = await Q`
+      SELECT pacts_made, pacts_received
+      FROM users
+      WHERE username = ${username}
+      LIMIT 1
+    `;
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const pactIds =
+      type === "received" ? user.pacts_received : user.pacts_made;
+
+    if (!pactIds || pactIds.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: "No pacts found",
+        pacts: [],
+        hasMore: false,
+      });
+    }
+
+    const pacts = await Q`
+      SELECT *
+      FROM pacts
+      WHERE id = ANY(${pactIds}::uuid[])
+        AND title ILIKE ${"%" + search + "%"}
+      ORDER BY created_at DESC
+      LIMIT ${limit}
+      OFFSET ${offset}
+    `;
+
+    return res.status(200).json({
+      success: true,
+      message: "Pacts fetched successfully",
+      pacts,
+      hasMore: pacts.length === Number(limit),
+    });
+  } catch (error) {
+    console.log("Error in getMyPacts controller: ", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
   }
 };

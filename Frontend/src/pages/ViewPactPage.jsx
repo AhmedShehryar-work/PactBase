@@ -10,7 +10,7 @@ export default function ViewPactPage() {
   const { authUser } = useAuthStore();
   const [searchParams] = useSearchParams();
   const pactId = searchParams.get("id"); 
-  const { searchPact, searchedPact, isSearchingPact, fulfillPact} = usePactStore();
+  const { searchPact, searchedPact, isSearchingPact, fulfillPact, fulfillingPact} = usePactStore();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -159,10 +159,14 @@ export default function ViewPactPage() {
         {pact.status !== "fulfilled" && authUser.username === pact.from && (
           <div className="flex justify-center mt-20">
             <button
-              onClick={() => fulfillPact(pact.id)}
-              className="px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition"
+              onClick={() => handleFulfill(pact.id)}
+              disabled={fulfillingPact}
+              className={`px-6 py-3 rounded-lg font-semibold transition 
+                ${fulfillingPact 
+                  ? "bg-[#01470b]" 
+                  : "bg-green-600 text-white hover:bg-green-700"}`}
             >
-              Mark as Fulfilled
+              {fulfillingPact ? "Fulfilling..." : "Mark as Fulfilled"}
             </button>
           </div>
         )}
