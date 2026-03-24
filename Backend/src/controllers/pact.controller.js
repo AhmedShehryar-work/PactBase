@@ -1,16 +1,17 @@
 import Q from "../config/db.js"
 import { v4 as uid } from 'uuid';
+import { notifyUser } from "../socket/index.js";
 
 export const searchPact = async (req, res) =>{
 
-    const {pactId} = req.query;
-
     try {
+
+        const {pactId} = req.query;
 
         if (!pactId || pactId.trim() === "") {
         return res.status(400).json({ success: false , message: "PactId is required" });
         }
-
+        // TODO: Add uuid format verification 
             const [result] = await Q`
             SELECT *
             FROM pacts
@@ -40,6 +41,9 @@ export const searchPact = async (req, res) =>{
 export const makePact = async (req, res) => {
 
     try {
+
+        const io = req.app.get("io");
+
         const {title, conditions, to, from} = req.body;
 
         if (!title?.trim() || !from || !to || !to.length) {
@@ -94,6 +98,10 @@ export const makePact = async (req, res) => {
 
             });
 
+            to.forEach((username) => {
+              notifyUser(io, username, "pact_request", { username: from, pactId });
+            });
+
             res.status(201).json({ success: true , id: pactId, message: "Pact made."});
 
         } catch (error) {
@@ -109,10 +117,14 @@ export const makePact = async (req, res) => {
 }
 
 export const fulfillPact = async (req, res) => {
-  const { pactId } = req.body;
-  const username = req.user.username;
 
   try {
+
+    const io = req.app.get("io");
+
+    const { pactId } = req.body;
+    const username = req.user.username;
+
     // Fetch pact
     const [pact] = await Q`SELECT * FROM pacts WHERE id = ${pactId}`;
     if (!pact) return res.status(404).json({ message: "Pact not found" });
@@ -129,12 +141,16 @@ export const fulfillPact = async (req, res) => {
     if (toUsers && toUsers.length > 0) {
       for (const user of toUsers) {
         await Q`UPDATE users SET pacts_fulfilled = COALESCE(pacts_fulfilled, 0) + 1 WHERE username = ${user}`;
+        notifyUser(io, user, "pact_fulfilled", { pactId: pact.id });
+        //TODO: Implement rating logic for users from pact rating
+        // probably rating = (pact-rating * fromUser-rating) / 5
       }
     }
 
     // Return updated pact
     const [updatedPact] = await Q`SELECT * FROM pacts WHERE id = ${pactId}`;
     res.json({ pact: updatedPact });
+    
   } catch (err) {
     console.error("fulfillPact error:", err);
     res.status(500).json({ message: "Internal server error" });

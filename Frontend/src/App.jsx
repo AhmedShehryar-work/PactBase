@@ -1,19 +1,21 @@
-import SignUpPage from "./pages/SignupPage";
-import AdminPage from "./pages/AdminPage";
-import LoginPage from "./pages/LoginPage";
-import LandingPage from "./pages/LandingPage";
-import Dashboard from "./pages/Dashboard";
-import PageNotFound from "./pages/PageNotFound";
-import SearchPage from "./pages/SearchPage"
-import MakePactPage from "./pages/MakePactPage"
-import ViewPactPage from "./pages/ViewPactPage"
-import ViewUserPage from "./pages/ViewUserPage"
-import MyPactsPage from "./pages/MyPactsPage";
+import { lazy, Suspense } from "react";
+
+const SignUpPage = lazy(() => import("./pages/SignupPage"));
+const AdminPage = lazy(() => import("./pages/AdminPage"));
+const LoginPage = lazy(() => import("./pages/LoginPage"));
+const LandingPage = lazy(() => import("./pages/LandingPage"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const PageNotFound = lazy(() => import("./pages/PageNotFound"));
+const SearchPage = lazy(() => import("./pages/SearchPage"));
+const MakePactPage = lazy(() => import("./pages/MakePactPage"));
+const ViewPactPage = lazy(() => import("./pages/ViewPactPage"));
+const ViewUserPage = lazy(() => import("./pages/ViewUserPage"));
+const MyPactsPage = lazy(() => import("./pages/MyPactsPage"));
 
 import {BrowserRouter as Router, Routes, Route, Link, Navigate} from "react-router-dom";
 import { useEffect } from "react";
 import { useAuthStore } from "./stores/useAuthStore";
-
+import { socket } from "./socket/socket";
 
 const App = () => {
 
@@ -22,7 +24,17 @@ const App = () => {
 
   useEffect(() => {
     checkAuth();
-  }, [checkAuth]);
+
+    socket.on("auth_error", (err) => {
+      console.warn("Socket auth failed:", err.message);
+      logout(); // force logout if socket auth fails
+    });
+
+    return () => {
+      socket.off("auth_error");
+    };
+
+  }, [checkAuth, logout]);
 
   if (isCheckingAuth)
     return (
@@ -33,22 +45,17 @@ const App = () => {
 
 
   return (
-    <div>
+    <>
 
       <Router>
-      <nav style={{ textAlign: "center", padding: "20px", fontSize: "24px" }}>
-        <Link to="/signup" style={{ margin: "0 20px" }}>Signup</Link>
-        <Link to="/admin" style={{ margin: "0 20px" }}>Admin</Link>
-        <Link to="/search-pact" style={{ margin: "0 20px" }}>Search Pact</Link>
-        <Link to="/make-pact" style={{ margin: "0 20px" }}>Make Pact</Link>
-        <Link to="/login" style={{ margin: "0 20px" }}>Login</Link>
-        <Link to="/" style={{ margin: "0 20px" }}>Home</Link>
+
         {authUser && (
                 <button onClick={logout}>
                   Logout
                 </button>
         )}
-      </nav>
+
+      <Suspense fallback={<div><h1>Loading</h1></div>}>
 
       <Routes>
         <Route path="/" element={<LandingPage />}/>
@@ -58,16 +65,17 @@ const App = () => {
         <Route path="/user" element={<ViewUserPage/>} />
         <Route path="/dashboard" element={authUser ? <Dashboard /> : <Navigate to="/login" />} />
         <Route path="/search-pact" element={<SearchPage />} />
-        <Route path="/make-pact" element={authUser ? <MakePactPage /> : <Navigate to="/login" />}/>
-        <Route path="/my-pacts" element={authUser ? <MyPactsPage /> : <Navigate to="/login" />} />
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/signup" element={!authUser ? <SignUpPage /> : <Navigate to="/dashboard" />} />
         <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to="/dashboard" />} />
         <Route path="/*" element={<PageNotFound />} />
       </Routes>
-    </Router>
 
-    </div>
+      </Suspense>
+
+    </Router>
+    
+    </>
   );
 };
 export default App;

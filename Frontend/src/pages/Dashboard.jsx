@@ -1,17 +1,56 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { FiUser, FiBell, FiPlusCircle, FiSearch, FiFileText, FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { usePactStore } from "../stores/usePactStore";
+import { socket } from "../socket/socket";
+import { toast, Toaster } from "react-hot-toast";
 
 import MakePactForm from "./MakePactPage";
 import MyPactsPage from "./MyPactsPage";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("myPacts"); // Default tab changed
-  const [showNotifications, setShowNotifications] = useState(false);
   const [isBottomBarVisible, setIsBottomBarVisible] = useState(true);
   const navigate = useNavigate();
+
+  useEffect(() => {
+  socket.on("notification", (notif) => {
+    console.log("Incoming notification:", notif);
+
+    // Show toast based on type
+    if (notif.type === "pact_request") {
+      toast((t) => (
+        <span
+          className="cursor-pointer"
+          onClick={() => {
+            navigate(`/pact?id=${notif.data.pactId}`);
+            toast.dismiss(t.id);
+          }}
+        >
+          New pact request from <b>{notif.data.username}</b>
+        </span>
+      ));
+    }
+
+    if (notif.type === "pact_fulfilled") {
+        toast(`Pact fulfilled: ${notif.data.pactId}`, {
+          icon: "✅",
+        });
+      }
+
+      // Refresh pacts
+      const { resetMyPacts, getMyPacts } = usePactStore.getState();
+
+      resetMyPacts();
+      getMyPacts({ type: "made" });
+      getMyPacts({ type: "received" });
+    });
+
+    return () => {
+      socket.off("notification");
+    };
+  }, []);
 
   const tabs = [
     { id: "searchPact", label: "Search Pacts", icon: <FiSearch size={24} /> },
@@ -25,9 +64,8 @@ export default function Dashboard() {
       <header className="sticky top-0 bg-white shadow-md h-20 flex items-center justify-between px-6 relative">
         <button
           className="text-[#0b0a1f] hover:text-gray-700 transition"
-          onClick={() => setShowNotifications(!showNotifications)}
         >
-          <FiBell size={28} />
+          
         </button>
 
         <h1 className="text-4xl sm:text-5xl font-extrabold text-[#0b0a1f]">
@@ -41,29 +79,12 @@ export default function Dashboard() {
           <FiUser size={28} />
         </button>
 
-        {/* Notifications Sidebar */}
-        <AnimatePresence>
-        {showNotifications && (
-          <motion.div
-            initial={{ x: -40, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -40, opacity: 0 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
-            className="absolute top-20 left-0 w-80 h-[calc(100vh-5rem)] bg-white shadow-xl border-r border-gray-200 p-4 z-50 rounded-r-xl overflow-y-auto"
-          >
-            <h2 className="text-xl font-semibold text-[#0b0a1f] mb-4">Notifications</h2>
-            <ul className="space-y-3">
-              <li className="bg-gray-100 p-3 rounded-lg">🔔 New pact request from John</li>
-              <li className="bg-gray-100 p-3 rounded-lg">🔔 Pact "Lease Agreement" approved</li>
-              <li className="bg-gray-100 p-3 rounded-lg">🔔 Reminder: Review your pact</li>
-            </ul>
-          </motion.div>
-        )}
-      </AnimatePresence>
       </header>
 
       {/* ======= MAIN CONTENT ======= */}
       <main className="flex-1 p-6 pb-24">
+        <Toaster position="top-left" reverseOrder={false} />
+
           {activeTab === "makePact" && <MakePactForm/>}
 
           {activeTab === "searchPact" && <PactSearch/>}
