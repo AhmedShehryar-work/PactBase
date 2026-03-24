@@ -3,11 +3,17 @@ import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import helmet from "helmet"
+import http from "http";
+import { Server } from "socket.io"
+
+import initSocket from "./socket/index.js";
 
 import authRoutes from "./routes/auth.route.js";
 import adminRoutes from "./routes/admin.route.js";
 import pactRoutes from "./routes/pact.route.js";
 import userRoutes from "./routes/user.route.js"
+
+import bcrypt from "bcryptjs";
 
 dotenv.config();
 
@@ -23,7 +29,7 @@ app.use(helmet({
         "script-src": ["'self'"],          // only allow JS from your server/bundle
         "style-src": ["'self'", "'unsafe-inline'"], // allow CSS from your server; inline styles if needed
         "img-src": ["'self'", "data:"],    // allow images from server + base64 images
-        "connect-src": ["'self'", "http://localhost:4000"], // allow API calls to your backend
+        "connect-src": ["'self'", "http://localhost:4000", "http://localhost:5000"], // allow API calls to your backend
         "font-src": ["'self'"],             // allow fonts from your server
         "object-src": ["'none'"],           // disable object/embed tags
         "frame-ancestors": ["'none'"],     // prevent clickjacking
@@ -46,6 +52,17 @@ app.use("/api/pact", pactRoutes);
 app.use("/api/user", userRoutes);
 app.use("/admin", adminRoutes);
 
-app.listen(PORT, () => {
+const server = http.createServer(app);
+
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173",
+    credentials: true,
+  },
+});
+
+initSocket(io);
+app.set("io", io);
+server.listen(PORT, () => {
   console.log("Server is running on PORT: " + PORT);
 });

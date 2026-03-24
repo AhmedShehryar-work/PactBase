@@ -1,5 +1,6 @@
 import axios from "axios";
 import { create } from "zustand";
+import { socket } from "../socket/socket";
 
 export const useAuthStore = create((set) => ({
 
@@ -13,6 +14,9 @@ export const useAuthStore = create((set) => ({
     try {
       const res = await axios.get("http://localhost:4000/api/auth/check", { withCredentials: true });
       set({ authUser: res.data });
+      if (!socket.connected) {
+        socket.connect();
+      }
     } catch (error) {
       console.log("Error in checkAuth:", error);
       set({ authUser: null }); // optional: only clear on certain errors
@@ -25,11 +29,15 @@ export const useAuthStore = create((set) => ({
 
     try {
       set({isLoggingIn: true});
+
       const res = await axios.post(
         "http://localhost:4000/api/auth/login",
         data,
         { withCredentials: true } // important for cookies
       );
+      if (!socket.connected) {
+        socket.connect();
+      }
       set({ authUser: res.data });
       set({ loginSuccess: true });
     } catch (err) {
@@ -51,6 +59,7 @@ export const useAuthStore = create((set) => ({
   logout: async () => {
     try {
       await axios.post("http://localhost:4000/api/auth/logout",{}, { withCredentials: true });
+      socket.disconnect();
       set({ authUser: null });
     } catch (error) {
       console.log("Error in logout: ", error);
