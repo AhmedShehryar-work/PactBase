@@ -1,5 +1,8 @@
 import Q from "../config/db.js"
 
+export const changeImage = async (req, res) =>{
+
+}
 
 export const verifyEmail = async (req, res) =>{
 

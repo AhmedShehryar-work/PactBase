@@ -7,10 +7,9 @@ const LandingPage = lazy(() => import("./pages/LandingPage"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const PageNotFound = lazy(() => import("./pages/PageNotFound"));
 const SearchPage = lazy(() => import("./pages/SearchPage"));
-const MakePactPage = lazy(() => import("./pages/MakePactPage"));
 const ViewPactPage = lazy(() => import("./pages/ViewPactPage"));
 const ViewUserPage = lazy(() => import("./pages/ViewUserPage"));
-const MyPactsPage = lazy(() => import("./pages/MyPactsPage"));
+const ProfilePage = lazy(() => import("./pages/ProfilePage"));
 
 import {BrowserRouter as Router, Routes, Route, Link, Navigate} from "react-router-dom";
 import { useEffect } from "react";
@@ -49,12 +48,6 @@ const App = () => {
 
       <Router>
 
-        {authUser && (
-                <button onClick={logout}>
-                  Logout
-                </button>
-        )}
-
       <Suspense fallback={<div><h1>Loading</h1></div>}>
 
       <Routes>
@@ -64,6 +57,7 @@ const App = () => {
         <Route path="/pact" element={<ViewPactPage/>} />
         <Route path="/user" element={<ViewUserPage/>} />
         <Route path="/dashboard" element={authUser ? <Dashboard /> : <Navigate to="/login" />} />
+        <Route path="/profile" element={!authUser ? <ProfilePage /> : <Navigate to="/login" />} />
         <Route path="/search-pact" element={<SearchPage />} />
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/signup" element={!authUser ? <SignUpPage /> : <Navigate to="/dashboard" />} />
